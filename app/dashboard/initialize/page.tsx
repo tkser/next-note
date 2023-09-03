@@ -1,13 +1,11 @@
 import InitializePage from "@/components/pages/InitializePage";
 
 export const metadata = {
-  title: 'Initialize | Note',
-}
+  title: "Initialize | Note",
+};
 
 const Initialize = () => {
-  return (
-    <InitializePage />
-  );
+  return <InitializePage />;
 };
 
 export default Initialize;

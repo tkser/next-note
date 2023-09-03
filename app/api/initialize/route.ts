@@ -1,5 +1,5 @@
 import { db } from "@vercel/postgres";
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 import { generatePasswordHash } from "@/utils/auth";
 
@@ -23,7 +23,8 @@ async function checkIfInitialized() {
       WHERE table_name = 'pages'
     ) AS "pages_table_exists";
   `);
-  const { users_table_exists, notes_table_exists, pages_table_exists } = rows[0];
+  const { users_table_exists, notes_table_exists, pages_table_exists } =
+    rows[0];
   if (!users_table_exists || !notes_table_exists || !pages_table_exists) {
     await client.release();
     return false;
@@ -45,32 +46,41 @@ async function checkIfInitialized() {
   return true;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const initialized = await checkIfInitialized();
     if (initialized) {
-      return NextResponse.json({
-        status: 200,
-        message: "INITIALIZED",
-      }, {
-        status: 200,
-      })
+      return NextResponse.json(
+        {
+          status: 200,
+          message: "INITIALIZED",
+        },
+        {
+          status: 200,
+        },
+      );
     } else {
-      return NextResponse.json({
-        status: 200,
-        message: "NOT_INITIALIZED",
-      }, {
-        status: 200,
-      })
+      return NextResponse.json(
+        {
+          status: 200,
+          message: "NOT_INITIALIZED",
+        },
+        {
+          status: 200,
+        },
+      );
     }
   } catch (error) {
     console.error("Error during initialization", error);
-    return NextResponse.json({
-      status: 500,
-      message: "INITIALIZATION_ERROR",
-    }, {
-      status: 500,
-    })
+    return NextResponse.json(
+      {
+        status: 500,
+        message: "INITIALIZATION_ERROR",
+      },
+      {
+        status: 500,
+      },
+    );
   }
 }
 
@@ -78,16 +88,19 @@ export async function POST(request: NextRequest) {
   try {
     const initialized = await checkIfInitialized();
     if (initialized) {
-      return NextResponse.json({
-        status: 200,
-        message: "INITIALIZED",
-      }, {
-        status: 200,
-      })
+      return NextResponse.json(
+        {
+          status: 200,
+          message: "INITIALIZED",
+        },
+        {
+          status: 200,
+        },
+      );
     }
 
     const client = await db.connect();
-    const { username, password } = await request.json() as {
+    const { username, password } = (await request.json()) as {
       username: string;
       password: string;
     };
@@ -177,19 +190,25 @@ export async function POST(request: NextRequest) {
 
     await client.release();
 
-    return NextResponse.json({
-      status: 201,
-      message: "INITIALIZED",
-    }, {
-      status: 201,
-    })
+    return NextResponse.json(
+      {
+        status: 201,
+        message: "INITIALIZED",
+      },
+      {
+        status: 201,
+      },
+    );
   } catch (error) {
     console.error("Error during initialization", error);
-    return NextResponse.json({
-      status: 500,
-      message: "INITIALIZATION_ERROR",
-    }, {
-      status: 500,
-    })
+    return NextResponse.json(
+      {
+        status: 500,
+        message: "INITIALIZATION_ERROR",
+      },
+      {
+        status: 500,
+      },
+    );
   }
 }

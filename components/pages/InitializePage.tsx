@@ -49,7 +49,7 @@ const InitializePage = () => {
 
   useEffect(() => {
     checkInitialized();
-  }, []);
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -63,9 +63,7 @@ const InitializePage = () => {
               This is your first time running this app. Please initialize the
               database.
             </p>
-            <p className="mb-2 text-gray-500">
-              Admin Username:
-            </p>
+            <p className="mb-2 text-gray-500">Admin Username:</p>
             <input
               type="text"
               className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
