@@ -3,7 +3,7 @@
 const Page = () => {
   return (
     <div>
-      <h1>note</h1>
+      <h1>initialize</h1>
     </div>
   );
 };
