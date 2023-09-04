@@ -1,10 +1,14 @@
 "use client";
 
+import AuthWrapper from "@/components/AuthWrapper";
+
 const Page = () => {
   return (
-    <div>
-      <h1>dashboard</h1>
-    </div>
+    <AuthWrapper>
+      <div>
+        <h1>Dashboard</h1>
+      </div>
+    </AuthWrapper>
   );
 };
 

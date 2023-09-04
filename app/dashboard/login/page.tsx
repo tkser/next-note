@@ -1,11 +1,11 @@
-"use client";
+import LoginPage from "@/components/pages/LoginPage";
 
-const Page = () => {
-  return (
-    <div>
-      <h1>login</h1>
-    </div>
-  );
+export const metadata = {
+  title: "Login | Note",
 };
 
-export default Page;
+const Login = () => {
+  return <LoginPage />;
+};
+
+export default Login;

@@ -52,8 +52,10 @@ export async function GET() {
     if (initialized) {
       return NextResponse.json(
         {
-          status: 200,
-          message: "INITIALIZED",
+          meta: {
+            status: 200,
+            message: "INITIALIZED",
+          }
         },
         {
           status: 200,
@@ -62,8 +64,10 @@ export async function GET() {
     } else {
       return NextResponse.json(
         {
-          status: 200,
-          message: "NOT_INITIALIZED",
+          meta: {
+            status: 200,
+            message: "NOT_INITIALIZED",
+          }
         },
         {
           status: 200,
@@ -74,8 +78,10 @@ export async function GET() {
     console.error("Error during initialization", error);
     return NextResponse.json(
       {
-        status: 500,
-        message: "INITIALIZATION_ERROR",
+        meta: {
+          status: 500,
+          message: "INITIALIZATION_ERROR",
+        }
       },
       {
         status: 500,
@@ -90,8 +96,10 @@ export async function POST(request: NextRequest) {
     if (initialized) {
       return NextResponse.json(
         {
-          status: 200,
-          message: "INITIALIZED",
+          meta: {
+            status: 200,
+            message: "INITIALIZED",
+          }
         },
         {
           status: 200,
@@ -192,8 +200,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        status: 201,
-        message: "INITIALIZED",
+        meta: {
+          status: 201,
+          message: "INITIALIZED",
+        }
       },
       {
         status: 201,
@@ -203,8 +213,10 @@ export async function POST(request: NextRequest) {
     console.error("Error during initialization", error);
     return NextResponse.json(
       {
-        status: 500,
-        message: "INITIALIZATION_ERROR",
+        meta: {
+          status: 500,
+          message: "INITIALIZATION_ERROR",
+        }
       },
       {
         status: 500,

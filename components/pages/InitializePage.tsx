@@ -16,7 +16,7 @@ const InitializePage = () => {
       });
       const data = await response.json();
 
-      if (data.message === "INITIALIZED") {
+      if (data.meta.message === "INITIALIZED") {
         router.push("/");
       } else {
         setMessage("NOT_INITIALIZED");
@@ -37,7 +37,7 @@ const InitializePage = () => {
       });
       const data = await response.json();
 
-      if (data.message === "INITIALIZED") {
+      if (data.meta.message === "INITIALIZED") {
         setMessage("SUCCESS");
       } else {
         setMessage("ERROR");
