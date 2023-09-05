@@ -12,6 +12,10 @@ export async function POST(request: NextRequest) {
       return makeResponse(400, "BAD_REQUEST");
     }
 
+    if (!slug.match(/^[a-zA-Z0-9_-]+$/)) {
+      return makeResponse(400, "BAD_REQUEST");
+    }
+
     const token = request.cookies.get("token");
     if (!token) {
       return makeResponse(401, "UNAUTHORIZED");
