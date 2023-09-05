@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         meta: {
           status: 401,
-          message: "LOGIN_FAILED",
+          message: "INVALID_USERNAME_OR_PASSWORD",
         }
       }, {
         status: 401,
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
       role: user.role
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       meta: {
         status: 200,
         message: "LOGIN_SUCCESS",
@@ -96,12 +96,19 @@ export async function POST(request: NextRequest) {
       }
     }, {
       status: 200,
-      headers: {
-        "Set-Cookie": `token=${next_token}; Path=/; HttpOnly; Secure; SameSite=Strict;`
-      }
     });
+    response.cookies.set("token", next_token, {
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 1,
+    });
+
+    return response;
     
   } catch (error) {
+    console.error(error);
     return NextResponse.json({
       meta: {
         status: 500,

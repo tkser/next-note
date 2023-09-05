@@ -3,36 +3,37 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const LoginPage = () => {
+const LoginPage = async () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
 
-  const checkLoggedIn = async () => {
-    const res = await fetch("/api/login", { method: "POST" });
-    const data = await res.json();
-    if (data.meta.message === "LOGIN_SUCCESS") {
-      router.push("/");
+  const handleLogin = async (e : React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setErrors([]);
+    if (!username || !password) {
+      setErrors(["Username and password are required"]);
+      return;
     }
-  }
-
-  const handleLogin = async () => {
-    const res = await fetch("/api/login", {
+    const res = await fetch("/api/auth/login", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ username, password }),
     });
     const data = await res.json();
     if (data.meta.message === "LOGIN_SUCCESS") {
-      router.push("/");
+      router.push("/dashboard");
     } else {
-      //
+      if (data.meta.message === "INVALID_USERNAME_OR_PASSWORD") {
+        setErrors(["Username or password is incorrect"]);
+      } else {
+        setErrors(["An error occurred. Please try again later"]);
+      }
     }
   }
-
-  useEffect(() => {
-    checkLoggedIn();
-  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -51,6 +52,7 @@ const LoginPage = () => {
             type="text"
             className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
             value={username}
+            required
             onChange={(e) => setUsername(e.target.value)}
           />
           <p className="mb-2 text-gray-500">Password:</p>
@@ -58,6 +60,7 @@ const LoginPage = () => {
             type="password"
             className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="mb-4 text-center">
