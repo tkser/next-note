@@ -1,13 +1,13 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import LogoutPage from "@/app/_components/pages/LogoutPage";
 
 export const metadata = {
   title: "Logout | Note",
 };
 
 const Login = async () => {
-  cookies().delete("token");
-  return redirect("/");
+  return (
+    <LogoutPage />
+  )
 };
 
 export default Login;
