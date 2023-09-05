@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import LoginPage from "@/app/_components/pages/LoginPage";
-import { verifyJWT } from "@/app/_utils/auth";
+import { loginWithToken } from "@/app/_libs/auth";
 
 export const metadata = {
   title: "Login | Note",
@@ -11,7 +11,7 @@ export const metadata = {
 const Login = async () => {
   const token = cookies().get("token");
   if (token) {
-    const user = await verifyJWT(token.value);
+    const user = await loginWithToken(token.value);
     if (user) {
       return redirect("/dashboard");
     }

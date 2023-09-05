@@ -1,53 +1,10 @@
-import { db } from "@vercel/postgres";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import {
-  JWTPayload,
-  comparePasswordHash,
   generateJWT,
-  verifyJWT,
 } from "@/app/_utils/auth";
-
-async function loginWithToken(token: string) {
-  try {
-    const user = await verifyJWT(token);
-    return user;
-  } catch (error) {
-    return null;
-  }
-}
-
-async function loginWithPassword(username: string, password: string) {
-  const client = await db.connect();
-  const {
-    rows: [user],
-  } = await client.query(
-    `
-    SELECT * FROM users
-    WHERE username = $1 AND is_deleted = false
-    LIMIT 1;
-  `,
-    [username],
-  );
-
-  if (!user) {
-    return null;
-  }
-
-  const password_hash = user.password_hash;
-  const passwordMatches = await comparePasswordHash(password, password_hash);
-
-  if (!passwordMatches) {
-    return null;
-  }
-
-  await client.release();
-  return {
-    user_id: user.user_id,
-    username: user.username,
-    role: user.role,
-  } as JWTPayload;
-}
+import { makeResponse } from "@/app/_utils/response";
+import { loginWithPassword, loginWithToken } from "@/app/_libs/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -57,38 +14,17 @@ export async function POST(request: NextRequest) {
     };
     const token = request.cookies.get("token");
 
-    let user: JWTPayload | null = null;
+    let user: User | null = null;
 
     if (username && password) {
       user = await loginWithPassword(username, password);
     } else if (token) {
       user = await loginWithToken(token.value);
     } else {
-      return NextResponse.json(
-        {
-          meta: {
-            status: 400,
-            message: "MISSING_USERNAME_OR_PASSWORD",
-          },
-        },
-        {
-          status: 400,
-        },
-      );
+      return makeResponse(400, "MISSING_USERNAME_OR_PASSWORD");
     }
-
     if (!user) {
-      return NextResponse.json(
-        {
-          meta: {
-            status: 401,
-            message: "INVALID_USERNAME_OR_PASSWORD",
-          },
-        },
-        {
-          status: 401,
-        },
-      );
+      return makeResponse(401, "INVALID_USERNAME_OR_PASSWORD");
     }
 
     const next_token = await generateJWT({
@@ -96,26 +32,15 @@ export async function POST(request: NextRequest) {
       username: user.username,
       role: user.role,
     });
-
-    const response = NextResponse.json(
-      {
-        meta: {
-          status: 200,
-          message: "LOGIN_SUCCESS",
-        },
-        data: {
-          type: "user",
-          user: {
-            user_id: user.user_id,
-            username: user.username,
-            role: user.role,
-          },
-        },
-      },
-      {
-        status: 200,
-      },
-    );
+    
+    const response = makeResponse<ApiDataUserResponse>(200, "LOGIN_SUCCESS", {
+      type: "user",
+      user: {
+        user_id: user.user_id,
+        username: user.username,
+        role: user.role,
+      }
+    });
     response.cookies.set("token", next_token, {
       path: "/",
       httpOnly: true,
@@ -127,16 +52,6 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      {
-        meta: {
-          status: 500,
-          message: "INTERNAL_SERVER_ERROR",
-        },
-      },
-      {
-        status: 500,
-      },
-    );
+    return makeResponse(500, "INTERNAL_SERVER_ERROR");
   }
 }

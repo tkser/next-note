@@ -1,12 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export type JWTPayload = {
-  user_id: string;
-  username: string;
-  role: string;
-};
-
 async function generatePasswordHash(password: string) {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);

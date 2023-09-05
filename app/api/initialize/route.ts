@@ -1,31 +1,19 @@
 import { db } from "@vercel/postgres";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { generatePasswordHash } from "@/app/_utils/auth";
 import { checkIfInitialized } from "@/app/_libs/database";
+import { makeResponse } from "@/app/_utils/response";
 
 export async function POST(request: NextRequest) {
   try {
     const initialized = await checkIfInitialized();
     if (initialized) {
-      return NextResponse.json(
-        {
-          meta: {
-            status: 200,
-            message: "INITIALIZED",
-          },
-        },
-        {
-          status: 200,
-        },
-      );
+      return makeResponse(200, "INITIALIZED");
     }
 
     const client = await db.connect();
-    const { username, password } = (await request.json()) as {
-      username: string;
-      password: string;
-    };
+    const { username, password } = (await request.json()) as InitializeApiRequest;
     const { salt, hash } = await generatePasswordHash(password);
 
     await client.query(`
@@ -112,29 +100,9 @@ export async function POST(request: NextRequest) {
 
     await client.release();
 
-    return NextResponse.json(
-      {
-        meta: {
-          status: 201,
-          message: "INITIALIZED",
-        },
-      },
-      {
-        status: 201,
-      },
-    );
+    return makeResponse(201, "INITIALIZED");
   } catch (error) {
     console.error("Error during initialization", error);
-    return NextResponse.json(
-      {
-        meta: {
-          status: 500,
-          message: "INITIALIZATION_ERROR",
-        },
-      },
-      {
-        status: 500,
-      },
-    );
+    return makeResponse(500, "INITIALIZATION_ERROR");
   }
 }

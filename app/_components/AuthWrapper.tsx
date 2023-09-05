@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { verifyJWT } from "@/app/_utils/auth";
+import { loginWithToken } from "../_libs/auth";
 
 type AuthWrapperProps = {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ const AuthWrapper = async ({ children }: AuthWrapperProps) => {
   if (!token) {
     return redirect("/dashboard/login");
   }
-  const user = await verifyJWT(token.value);
+  const user = await loginWithToken(token.value);
   if (!user) {
     return redirect("/dashboard/login");
   }
