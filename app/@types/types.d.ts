@@ -112,3 +112,14 @@ type PageDatabaseRow = {
   created_at: Date;
   updated_at: Date;
 };
+
+type TableOfContent = {
+  level: string;
+  title: string;
+  href: string;
+};
+
+type Article = {
+  contentHtml: string;
+  tableOfContents: TableOfContent[];
+}
