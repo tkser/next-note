@@ -1,7 +1,8 @@
-import LoginPage from "@/app/components/pages/LoginPage";
-import { verifyJWT } from "@/utils/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+import LoginPage from "@/app/_components/pages/LoginPage";
+import { verifyJWT } from "@/app/_utils/auth";
 
 export const metadata = {
   title: "Login | Note",

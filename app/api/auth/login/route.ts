@@ -1,7 +1,7 @@
 import { db } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 
-import { JWTPayload, comparePasswordHash, generateJWT, verifyJWT } from "@/utils/auth";
+import { JWTPayload, comparePasswordHash, generateJWT, verifyJWT } from "@/app/_utils/auth";
 
 async function loginWithToken(token: string) {
   try {

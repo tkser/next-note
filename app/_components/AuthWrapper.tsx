@@ -1,6 +1,7 @@
-import { verifyJWT } from "@/utils/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+import { verifyJWT } from "@/app/_utils/auth";
 
 type AuthWrapperProps = {
   children: React.ReactNode

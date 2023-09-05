@@ -1,4 +1,4 @@
-import AuthWrapper from "@/app/components/AuthWrapper";
+import AuthWrapper from "@/app/_components/AuthWrapper";
 
 const Page = async () => {
   return (
