@@ -16,7 +16,11 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
   const [note_pages, setNotePages] = useState(pages);
   const [errors, setErrors] = useState<string[]>([]);
   const [showAddPageForm, setShowAddPageForm] = useState(false);
-  const [formData, setFormData] = useState({ title: '', slug: '', isPrivate: note.is_private });
+  const [formData, setFormData] = useState({
+    title: "",
+    slug: "",
+    isPrivate: note.is_private,
+  });
 
   const handleSaveNote = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,16 +42,16 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
     } catch (err) {
       setErrors(["Something went wrong."]);
     }
-  }
+  };
   const handleAddPage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (showAddPageForm) {
       setShowAddPageForm(false);
-      setFormData({ title: '', slug: '', isPrivate: false });
+      setFormData({ title: "", slug: "", isPrivate: false });
     } else {
       setShowAddPageForm(true);
     }
-  }
+  };
   const handleAddPageSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors([]);
@@ -67,25 +71,25 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
         body: JSON.stringify(data),
       });
       setShowAddPageForm(false);
-      setFormData({ title: '', slug: '', isPrivate: false });
-      const json = await res.json() as ApiResponse<ApiDataPageResponse>;
+      setFormData({ title: "", slug: "", isPrivate: false });
+      const json = (await res.json()) as ApiResponse<ApiDataPageResponse>;
       if (json.meta.message === "CREATED") {
         if (json.data) {
-          setNotePages([...note_pages, json.data.page])
+          setNotePages([...note_pages, json.data.page]);
         } else {
-          setErrors(["Something went wrong."])
+          setErrors(["Something went wrong."]);
         }
       } else if (json.meta.message === "BAD_REQUEST") {
-        setErrors(["Invalid data."])
+        setErrors(["Invalid data."]);
       } else if (json.meta.message === "SLUG_CONFLICT") {
-        setErrors(["Slug is already taken."])
+        setErrors(["Slug is already taken."]);
       } else {
-        setErrors(["Something went wrong."])
+        setErrors(["Something went wrong."]);
       }
     } catch (err) {
       setErrors(["Something went wrong."]);
     }
-  }
+  };
 
   return (
     <div className="grow flex justify-center bg-gray-100">
@@ -166,11 +170,17 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           <h2 className="text-xl font-semibold mb-4 text-gray-700">
             Page List
           </h2>
-          <button className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 mb-4" onClick={handleAddPage}>
+          <button
+            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 mb-4"
+            onClick={handleAddPage}
+          >
             Add Page
           </button>
           {showAddPageForm && (
-            <form onSubmit={handleAddPageSubmit} className="border-2 border-gray-300 p-4 mb-2">
+            <form
+              onSubmit={handleAddPageSubmit}
+              className="border-2 border-gray-300 p-4 mb-2"
+            >
               <div className="mb-4">
                 <label htmlFor="page_title" className="block text-gray-600">
                   Title
@@ -181,7 +191,9 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
                   name="title"
                   className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   maxLength={127}
                   required
                 />
@@ -196,7 +208,9 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
                   name="slug"
                   className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
                   value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, slug: e.target.value })
+                  }
                   maxLength={127}
                   required
                   pattern="^[0-9a-zA-Z_-]+$"
@@ -209,7 +223,9 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
                   name="private"
                   className="p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700 mr-2"
                   checked={formData.isPrivate}
-                  onChange={(e) => setFormData({ ...formData, isPrivate: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isPrivate: e.target.checked })
+                  }
                   disabled={is_private}
                 />
                 <label htmlFor="page_private" className="text-gray-600">

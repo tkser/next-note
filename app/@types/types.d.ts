@@ -53,7 +53,7 @@ type ApiDataNoteResponse = {
 type ApiDataPageResponse = {
   type: "page";
   page: Page;
-}
+};
 
 type InitializeApiRequest = {
   username?: string;

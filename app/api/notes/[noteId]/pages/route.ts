@@ -34,7 +34,13 @@ export async function POST(request: NextRequest) {
     }
 
     const page = await createPage(
-      title, slug, content || "", is_private, user.user_id, note_id, position
+      title,
+      slug,
+      content || "",
+      is_private,
+      user.user_id,
+      note_id,
+      position,
     );
 
     if (!page) {

@@ -1,11 +1,13 @@
-import { db } from "@vercel/postgres";
 import { NextRequest } from "next/server";
 
 import { loginWithToken } from "@/app/_libs/auth";
-import { updateNote, getNote, getNoteById } from "@/app/_libs/note";
+import { updateNote, getNoteById } from "@/app/_libs/note";
 import { makeResponse } from "@/app/_utils/response";
 
-export async function PUT(request: NextRequest, {params}: {params: {noteId: string}}) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { noteId: string } },
+) {
   try {
     const reqJson = (await request.json()) as NoteApiRequest;
     const { title, slug, summary, is_private } = reqJson;
@@ -43,7 +45,11 @@ export async function PUT(request: NextRequest, {params}: {params: {noteId: stri
     }
 
     const updatedNote = await updateNote(
-      note.note_id, title, slug, summary, is_private,
+      note.note_id,
+      title,
+      slug,
+      summary,
+      is_private,
     );
 
     if (!updatedNote) {
