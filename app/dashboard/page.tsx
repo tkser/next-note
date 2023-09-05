@@ -1,8 +1,6 @@
-"use client";
+import AuthWrapper from "@/app/components/AuthWrapper";
 
-import AuthWrapper from "@/components/AuthWrapper";
-
-const Page = () => {
+const Page = async () => {
   return (
     <AuthWrapper>
       <div>

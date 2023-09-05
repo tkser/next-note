@@ -1,32 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const InitializePage = () => {
+const InitializePage = async () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("NOT_INITIALIZED");
 
-  const checkInitialized = async () => {
-    try {
-      const response = await fetch("/api/initialize", {
-        method: "GET",
-      });
-      const data = await response.json();
-
-      if (data.meta.message === "INITIALIZED") {
-        router.push("/");
-      } else {
-        setMessage("NOT_INITIALIZED");
-      }
-    } catch (error) {
-      setMessage("ERROR");
-    }
-  };
-
-  const initializeDatabase = async () => {
+  const initializeDatabase = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
       const response = await fetch("/api/initialize", {
         method: "POST",
@@ -46,10 +30,6 @@ const InitializePage = () => {
       setMessage("ERROR");
     }
   };
-
-  useEffect(() => {
-    checkInitialized();
-  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
