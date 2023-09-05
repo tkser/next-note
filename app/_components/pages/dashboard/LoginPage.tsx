@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
 
-  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors([]);
     if (!username || !password) {
@@ -23,7 +21,7 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ username, password }),
     });
-    const data = await res.json();
+    const data = await res.json() as ApiResponse<ApiDataUserResponse>;
     if (data.meta.message === "LOGIN_SUCCESS") {
       window.location.href = "/dashboard";
     } else {
@@ -47,30 +45,32 @@ const LoginPage = () => {
               <span key={error}>{error}</span>
             ))}
           </p>
-          <p className="mb-2 text-gray-500">Username:</p>
-          <input
-            type="text"
-            className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
-            value={username}
-            required
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <p className="mb-2 text-gray-500">Password:</p>
-          <input
-            type="password"
-            className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div className="mb-4 text-center">
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-              onClick={handleLogin}
-            >
-              Login
-            </button>
-          </div>
+          <form onSubmit={handleLogin}>
+            <p className="mb-2 text-gray-500">Username:</p>
+            <input
+              type="text"
+              className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
+              value={username}
+              required
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <p className="mb-2 text-gray-500">Password:</p>
+            <input
+              type="password"
+              className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
+              value={password}
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div className="mb-4 text-center">
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+              >
+                Login
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

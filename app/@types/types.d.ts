@@ -18,7 +18,7 @@ type Note = {
 
 type JWTPayload = User;
 
-type ApiResponse<T> = {
+type ApiResponse<T = undefined> = {
   data?: T;
   meta: {
     status: number;
