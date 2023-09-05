@@ -50,6 +50,11 @@ type ApiDataNoteResponse = {
   note: Note;
 };
 
+type ApiDataPageResponse = {
+  type: "page";
+  page: Page;
+}
+
 type InitializeApiRequest = {
   username?: string;
   password?: string;
@@ -83,6 +88,15 @@ type NoteApiRequest = {
   slug?: string;
   summary?: string;
   is_private?: boolean;
+};
+
+type PageApiRequest = {
+  title?: string;
+  slug?: string;
+  content?: string;
+  position?: number;
+  is_private?: boolean;
+  note_id?: string;
 };
 
 type PageDatabaseRow = {

@@ -29,6 +29,22 @@ async function getNote(slug: string): Promise<Note | null> {
   return row2Note(note);
 }
 
+async function getNoteById(note_id: string): Promise<Note | null> {
+  const client = await db.connect();
+  const { rows } = await client.query<NoteDatabaseRow>(
+    `
+    SELECT * FROM notes WHERE note_id = $1 AND is_deleted = false;
+  `,
+    [note_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return null;
+  }
+  const note = rows[0];
+  return row2Note(note);
+}
+
 async function createNote(
   title: string,
   slug: string,
@@ -53,4 +69,29 @@ async function createNote(
   return row2Note(note);
 }
 
-export { getNote, createNote };
+async function updateNote(
+  note_id: string,
+  title: string,
+  slug: string,
+  summary: string,
+  is_private: boolean,
+): Promise<Note | null> {
+  const client = await db.connect();
+  const { rows } = await client.query<NoteDatabaseRow>(
+    `
+    UPDATE notes
+    SET title = $1, slug = $2, summary = $3, is_private = $4
+    WHERE note_id = $5
+    RETURNING *;
+  `,
+    [title, slug, summary, is_private, note_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return null;
+  }
+  const note = rows[0];
+  return row2Note(note);
+}
+
+export { getNote, getNoteById, createNote, updateNote };
