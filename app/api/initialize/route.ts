@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
           meta: {
             status: 200,
             message: "INITIALIZED",
-          }
+          },
         },
         {
           status: 200,
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
         meta: {
           status: 201,
           message: "INITIALIZED",
-        }
+        },
       },
       {
         status: 201,
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
         meta: {
           status: 500,
           message: "INITIALIZATION_ERROR",
-        }
+        },
       },
       {
         status: 500,

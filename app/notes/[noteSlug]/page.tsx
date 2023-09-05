@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-const Note = async () => {
+const Note = () => {
   const { noteSlug } = useParams();
 
   return (
