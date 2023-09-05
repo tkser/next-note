@@ -14,6 +14,20 @@ type Note = {
   is_private: boolean;
   created_at: Date;
   updated_at: Date;
+  user_id: string;
+}
+
+type Page = {
+  page_id: string;
+  title: string;
+  slug: string;
+  content: string;
+  position: number;
+  is_private: boolean;
+  created_at: Date;
+  updated_at: Date;
+  user_id: string;
+  note_id: string;
 }
 
 type JWTPayload = User;

@@ -1,6 +1,6 @@
 import { db } from "@vercel/postgres";
 
-export async function checkIfInitialized() {
+async function checkIfInitialized() {
   const client = await db.connect();
 
   const { rows } = await client.query(`
@@ -42,3 +42,5 @@ export async function checkIfInitialized() {
 
   return true;
 }
+
+export { checkIfInitialized }
