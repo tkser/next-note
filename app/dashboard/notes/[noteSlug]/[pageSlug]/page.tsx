@@ -7,14 +7,18 @@ import { redirect } from "next/navigation";
 export async function generateMetadata({
   params,
 }: {
-  params: { noteSlug: string, pageSlug: string };
+  params: { noteSlug: string; pageSlug: string };
 }) {
   return {
     title: `${params.noteSlug}/${params.pageSlug} | Note Dashboard`,
   };
 }
 
-const PageEdit = async ({ params }: { params: { noteSlug: string, pageSlug: string } }) => {
+const PageEdit = async ({
+  params,
+}: {
+  params: { noteSlug: string; pageSlug: string };
+}) => {
   const page = await getPageBySlug(params.noteSlug, params.pageSlug);
   if (!page) return redirect("/dashboard");
   const note = await getNote(params.noteSlug);
