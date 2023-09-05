@@ -1,3 +1,4 @@
+import AuthWrapper from "@/app/_components/AuthWrapper";
 import NotePage from "@/app/_components/pages/NotePage";
 import { getNote } from "@/app/_libs/note";
 import { getPagesByNoteId } from "@/app/_libs/page";
@@ -26,7 +27,15 @@ const Note = async ({ params }: { params: { noteSlug: string } }) => {
   }
   const pages = await getPagesByNoteId(note.note_id);
   return (
-    <NotePage note={note} pages={pages} />
+    <>
+      {note.is_private ? (
+        <AuthWrapper redirect="/" user_id={note.user_id}>
+          <NotePage note={note} pages={pages} />
+        </AuthWrapper>
+      ) : (
+        <NotePage note={note} pages={pages} />
+      )}
+    </>
   );
 };
 

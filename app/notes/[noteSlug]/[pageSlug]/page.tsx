@@ -4,6 +4,7 @@ import { getPage, getPageBySlug } from "@/app/_libs/page";
 import { notFound } from "next/navigation";
 import markdownHtml from 'zenn-markdown-html';
 import { JSDOM } from "jsdom";
+import AuthWrapper from "@/app/_components/AuthWrapper";
 
 export async function generateMetadata({
   params,
@@ -46,7 +47,15 @@ const Page = async ({ params }: { params: { noteSlug: string, pageSlug: string }
     })
   })
   return (
-    <PageViewer note={note} page={page} article={article} />
+    <>
+      {page.is_private ? (
+        <AuthWrapper redirect="/" user_id={page.user_id}>
+          <PageViewer note={note} page={page} article={article} />
+        </AuthWrapper>
+      ) : (
+        <PageViewer note={note} page={page} article={article} />
+      )}
+    </>
   );
 };
 
