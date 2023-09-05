@@ -5,9 +5,7 @@ export const metadata = {
 };
 
 const Login = async () => {
-  return (
-    <LogoutPage />
-  )
+  return <LogoutPage />;
 };
 
 export default Login;

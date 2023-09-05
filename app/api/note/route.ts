@@ -7,7 +7,7 @@ import { makeResponse } from "@/app/_utils/response";
 
 export async function POST(request: NextRequest) {
   try {
-    const reqJson = await request.json() as NoteApiRequest;
+    const reqJson = (await request.json()) as NoteApiRequest;
     const { title, slug, summary, is_private } = reqJson;
 
     if (!title || !slug || !summary || is_private === undefined) {
@@ -43,7 +43,11 @@ export async function POST(request: NextRequest) {
     }
 
     const note = await createNote(
-      title, slug, summary, is_private, user.user_id
+      title,
+      slug,
+      summary,
+      is_private,
+      user.user_id,
     );
 
     if (!note) {

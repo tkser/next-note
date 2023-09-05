@@ -7,12 +7,13 @@ import { makeResponse } from "@/app/_utils/response";
 
 export async function POST(request: NextRequest) {
   try {
-    const { username, password } = (await request.json()) as InitializeApiRequest;
+    const { username, password } =
+      (await request.json()) as InitializeApiRequest;
 
     if (!username || !password) {
       return makeResponse(400, "BAD_REQUEST");
     }
-    
+
     const initialized = await checkIfInitialized();
     if (initialized) {
       return makeResponse(200, "INITIALIZED");

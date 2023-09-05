@@ -43,4 +43,4 @@ async function checkIfInitialized() {
   return true;
 }
 
-export { checkIfInitialized }
+export { checkIfInitialized };

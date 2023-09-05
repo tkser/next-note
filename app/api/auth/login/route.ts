@@ -1,8 +1,6 @@
 import { NextRequest } from "next/server";
 
-import {
-  generateJWT,
-} from "@/app/_utils/auth";
+import { generateJWT } from "@/app/_utils/auth";
 import { makeResponse } from "@/app/_utils/response";
 import { loginWithPassword, loginWithToken } from "@/app/_libs/auth";
 
@@ -32,14 +30,14 @@ export async function POST(request: NextRequest) {
       username: user.username,
       role: user.role,
     });
-    
+
     const response = makeResponse<ApiDataUserResponse>(200, "LOGIN_SUCCESS", {
       type: "user",
       user: {
         user_id: user.user_id,
         username: user.username,
         role: user.role,
-      }
+      },
     });
     response.cookies.set("token", next_token, {
       path: "/",

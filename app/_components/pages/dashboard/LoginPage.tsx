@@ -21,7 +21,7 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ username, password }),
     });
-    const data = await res.json() as ApiResponse<ApiDataUserResponse>;
+    const data = (await res.json()) as ApiResponse<ApiDataUserResponse>;
     if (data.meta.message === "LOGIN_SUCCESS") {
       window.location.href = "/dashboard";
     } else {

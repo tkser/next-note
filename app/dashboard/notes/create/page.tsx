@@ -10,7 +10,7 @@ const CreateNote = async () => {
     <AuthWrapper>
       <CreateNotePage />
     </AuthWrapper>
-  )
-}
+  );
+};
 
 export default CreateNote;

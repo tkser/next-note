@@ -1,9 +1,6 @@
 import { db } from "@vercel/postgres";
 
-import {
-  comparePasswordHash,
-  verifyJWT,
-} from "@/app/_utils/auth";
+import { comparePasswordHash, verifyJWT } from "@/app/_utils/auth";
 
 async function loginWithToken(token: string) {
   try {

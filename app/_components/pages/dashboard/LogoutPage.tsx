@@ -12,11 +12,9 @@ const LogoutPage = () => {
       router.push("/");
     };
     logout();
-  })
+  });
 
-  return (
-    <div className="grow flex items-center justify-center bg-gray-100" />
-  )
-}
+  return <div className="grow flex items-center justify-center bg-gray-100" />;
+};
 
 export default LogoutPage;

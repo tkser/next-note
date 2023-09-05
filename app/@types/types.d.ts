@@ -1,10 +1,10 @@
-type UserRole = 'admin' | 'user';
+type UserRole = "admin" | "user";
 
 type User = {
   username: string;
   user_id: string;
   role: UserRole;
-}
+};
 
 type Note = {
   note_id: string;
@@ -15,7 +15,7 @@ type Note = {
   created_at: Date;
   updated_at: Date;
   user_id: string;
-}
+};
 
 type Page = {
   page_id: string;
@@ -28,7 +28,7 @@ type Page = {
   updated_at: Date;
   user_id: string;
   note_id: string;
-}
+};
 
 type JWTPayload = User;
 
@@ -37,23 +37,23 @@ type ApiResponse<T = undefined> = {
   meta: {
     status: number;
     message: string;
-  }
-}
+  };
+};
 
 type ApiDataUserResponse = {
   type: "user";
   user: User;
-}
+};
 
 type ApiDataNoteResponse = {
   type: "note";
   note: Note;
-}
+};
 
 type InitializeApiRequest = {
   username?: string;
   password?: string;
-}
+};
 
 type UserDatabaseRow = {
   user_id: string;
@@ -64,7 +64,7 @@ type UserDatabaseRow = {
   is_deleted: boolean;
   created_at: Date;
   updated_at: Date;
-}
+};
 
 type NoteDatabaseRow = {
   note_id: string;
@@ -76,14 +76,14 @@ type NoteDatabaseRow = {
   is_deleted: boolean;
   created_at: Date;
   updated_at: Date;
-}
+};
 
 type NoteApiRequest = {
   title?: string;
   slug?: string;
   summary?: string;
   is_private?: boolean;
-}
+};
 
 type PageDatabaseRow = {
   page_id: string;
@@ -97,4 +97,4 @@ type PageDatabaseRow = {
   is_deleted: boolean;
   created_at: Date;
   updated_at: Date;
-}
+};
