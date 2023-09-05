@@ -15,7 +15,7 @@ const CreateNotePage = () => {
     e.preventDefault();
     setErrors([]);
     try {
-      const response = await fetch("/api/note", {
+      const response = await fetch("/api/notes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

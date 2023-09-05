@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) NOT NULL UNIQUE,
         content TEXT,
-        position INT,
+        position INT NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         is_private BOOLEAN NOT NULL DEFAULT FALSE,

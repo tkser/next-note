@@ -1,4 +1,3 @@
-import { db } from "@vercel/postgres";
 import { NextRequest } from "next/server";
 
 import { loginWithToken } from "@/app/_libs/auth";
@@ -32,11 +31,7 @@ export async function POST(request: NextRequest) {
       return makeResponse(401, "UNAUTHORIZED");
     }
 
-    const client = await db.connect();
-
     const slugCheck = await getNote(slug);
-
-    await client.release();
 
     if (slugCheck) {
       return makeResponse(409, "SLUG_CONFLICT");
