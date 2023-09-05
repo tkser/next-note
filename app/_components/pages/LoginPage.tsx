@@ -25,7 +25,7 @@ const LoginPage = () => {
     });
     const data = await res.json();
     if (data.meta.message === "LOGIN_SUCCESS") {
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } else {
       if (data.meta.message === "INVALID_USERNAME_OR_PASSWORD") {
         setErrors(["Username or password is incorrect"]);
