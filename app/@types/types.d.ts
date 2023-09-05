@@ -6,6 +6,16 @@ type User = {
   role: UserRole;
 }
 
+type Note = {
+  note_id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  is_private: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
 type JWTPayload = User;
 
 type ApiResponse<T> = {
@@ -21,9 +31,14 @@ type ApiDataUserResponse = {
   user: User;
 }
 
+type ApiDataNoteResponse = {
+  type: "note";
+  note: Note;
+}
+
 type InitializeApiRequest = {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
 }
 
 type UserDatabaseRow = {
@@ -32,6 +47,39 @@ type UserDatabaseRow = {
   role: UserRole;
   password_hash: string;
   password_salt: string;
+  is_deleted: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
+type NoteDatabaseRow = {
+  note_id: string;
+  user_id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  is_private: boolean;
+  is_deleted: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
+type NoteApiRequest = {
+  title?: string;
+  slug?: string;
+  summary?: string;
+  is_private?: boolean;
+}
+
+type PageDatabaseRow = {
+  page_id: string;
+  note_id: string;
+  user_id: string;
+  title: string;
+  slug: string;
+  content: string;
+  position: number;
+  is_private: boolean;
   is_deleted: boolean;
   created_at: Date;
   updated_at: Date;
