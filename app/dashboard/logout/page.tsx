@@ -1,4 +1,4 @@
-import LogoutPage from "@/app/_components/pages/LogoutPage";
+import LogoutPage from "@/app/_components/pages/dashboard/LogoutPage";
 
 export const metadata = {
   title: "Logout | Note",
