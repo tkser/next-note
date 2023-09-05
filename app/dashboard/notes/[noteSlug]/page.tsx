@@ -19,7 +19,7 @@ const NoteEdit = async ({ params }: { params: { noteSlug: string } }) => {
   if (!note) return redirect("/dashboard");
   const pages = await getPagesByNoteId(note.note_id);
   return (
-    <AuthWrapper redirect="/dashboard" user_id={note?.user_id}>
+    <AuthWrapper redirect="/dashboard" user_id={note.user_id}>
       <NoteEditPage note={note} pages={pages} />
     </AuthWrapper>
   );

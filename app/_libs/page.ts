@@ -53,6 +53,15 @@ async function getPage(note_id: string, slug: string): Promise<Page | null> {
   return row2Page(page);
 }
 
+async function getPageBySlug(note_slug: string, page_slug: string): Promise<Page | null> {
+  const note = await getNote(note_slug);
+  if (!note) {
+    return null;
+  }
+  const page = await getPage(note.note_id, page_slug);
+  return page;
+}
+
 async function createPage(
   title: string,
   slug: string,
@@ -79,4 +88,4 @@ async function createPage(
   return row2Page(page);
 }
 
-export { getPagesByNoteId, getPagesByNoteSlug, getPage, createPage };
+export { getPagesByNoteId, getPagesByNoteSlug, getPage, getPageBySlug, createPage };
