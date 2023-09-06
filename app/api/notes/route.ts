@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       return makeResponse(400, "BAD_REQUEST");
     }
 
-    if (slug !== "create") {
+    if (slug === "create") {
       return makeResponse(400, "BAD_REQUEST");
     }
 
