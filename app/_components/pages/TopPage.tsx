@@ -4,7 +4,7 @@ import Link from "next/link";
 
 type TopPageProps = {
   notes: Note[];
-}
+};
 
 const TopPage = ({ notes }: TopPageProps) => {
   return (
@@ -28,7 +28,7 @@ const TopPage = ({ notes }: TopPageProps) => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default TopPage;

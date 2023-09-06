@@ -13,7 +13,10 @@ async function row2Note(row: NoteDatabaseRow): Promise<Note> {
   };
 }
 
-async function getNotes(page: number = 1, pageSize: number = 100): Promise<Note[]> {
+async function getNotes(
+  page: number = 1,
+  pageSize: number = 100,
+): Promise<Note[]> {
   const client = await db.connect();
   const { rows } = await client.query<NoteDatabaseRow>(
     `
@@ -122,4 +125,11 @@ async function updateNote(
   return row2Note(note);
 }
 
-export { getNotes, getNotesByUserId, getNote, getNoteById, createNote, updateNote };
+export {
+  getNotes,
+  getNotesByUserId,
+  getNote,
+  getNoteById,
+  createNote,
+  updateNote,
+};

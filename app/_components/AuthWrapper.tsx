@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { loginWithToken } from "../_libs/auth";
+import { loginWithToken } from "@/app/_libs/auth";
 
 type AuthWrapperProps = {
   children: React.ReactNode;

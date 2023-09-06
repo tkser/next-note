@@ -5,22 +5,27 @@ import { useRouter } from "next/navigation";
 
 type DashboardPageProps = {
   notes: Note[];
-}
+};
 
 const DashboardPage = ({ notes }: DashboardPageProps) => {
   const router = useRouter();
   const handleCreateNote = () => {
     router.push("/dashboard/notes/create");
-  }
+  };
   const handleEditNote = (slug: string) => {
     router.push(`/dashboard/notes/${slug}`);
-  }
+  };
   return (
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-semibold mb-4 text-gray-700">My Notes</h1>
-          <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" onClick={handleCreateNote}>
+          <h1 className="text-2xl font-semibold mb-4 text-gray-700">
+            My Notes
+          </h1>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+            onClick={handleCreateNote}
+          >
             Create
           </button>
         </div>
@@ -34,7 +39,10 @@ const DashboardPage = ({ notes }: DashboardPageProps) => {
                   </Link>
                 </h2>
                 <div className="flex">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mr-2" onClick={() => handleEditNote(note.slug)}>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mr-2"
+                    onClick={() => handleEditNote(note.slug)}
+                  >
                     Edit
                   </button>
                 </div>
@@ -44,7 +52,7 @@ const DashboardPage = ({ notes }: DashboardPageProps) => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default DashboardPage;

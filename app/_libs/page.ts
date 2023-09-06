@@ -1,5 +1,6 @@
 import { db } from "@vercel/postgres";
-import { getNote } from "./note";
+
+import { getNote } from "@/app/_libs/note";
 
 async function row2Page(row: PageDatabaseRow): Promise<Page> {
   return {

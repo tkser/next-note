@@ -37,22 +37,30 @@ const PageViewer = ({ note, page, article }: PageViewerProps) => {
         <div className="hidden md:block w-72 ml-3">
           <div className="flex flex-col sticky top-6">
             <div className="p-4 shadow-md rounded-xl mb-6 bg-white">
-              <p className="text-xl text-bold mb-4 text-gray-700">
-                目次
-              </p>
+              <p className="text-xl text-bold mb-4 text-gray-700">目次</p>
               <ol className="relative border-l-2 border-gray-200 pl-4">
                 {article.tableOfContents.map((anchor: TableOfContent) => {
                   if (anchor.level === "H1") {
                     return (
                       <li className="" key={anchor.href}>
                         <div className="absolute w-3 h-3 bg-blue-400 rounded-full mt-1.5 -left-[7px] border border-white"></div>
-                        <a className="mb-4 text-base text-gray-500 dark:text-gray-700 font-semibold" href={anchor.href}>{anchor.title}</a>
+                        <a
+                          className="mb-4 text-base text-gray-500 dark:text-gray-700 font-semibold"
+                          href={anchor.href}
+                        >
+                          {anchor.title}
+                        </a>
                       </li>
                     );
                   } else {
                     return (
                       <li className="" key={anchor.href}>
-                        <a className="mb-4 text-base font-normal text-gray-500 dark:text-gray-700" href={anchor.href}>{anchor.title}</a>
+                        <a
+                          className="mb-4 text-base font-normal text-gray-500 dark:text-gray-700"
+                          href={anchor.href}
+                        >
+                          {anchor.title}
+                        </a>
                       </li>
                     );
                   }
@@ -63,7 +71,7 @@ const PageViewer = ({ note, page, article }: PageViewerProps) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default PageViewer;

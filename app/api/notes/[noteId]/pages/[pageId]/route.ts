@@ -6,12 +6,11 @@ import { getPageById, updatePage } from "@/app/_libs/page";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { noteId: string, pageId: string } },
+  { params }: { params: { noteId: string; pageId: string } },
 ) {
   try {
     const reqJson = (await request.json()) as PageApiRequest;
     const { title, slug, content, is_private, position } = reqJson;
-    const noteId = params.noteId;
     const pageId = params.pageId;
 
     if (!title || !slug || !content || is_private === undefined || !position) {

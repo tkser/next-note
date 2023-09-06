@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import LoginPage from "@/app/_components/pages/dashboard/LoginPage";
 import { loginWithToken } from "@/app/_libs/auth";
+import LoginPage from "@/app/_components/pages/dashboard/LoginPage";
 
 export const metadata = {
   title: "Login | Note",

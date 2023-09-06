@@ -1,8 +1,9 @@
-import AuthWrapper from "@/app/_components/AuthWrapper";
-import PageEditPage from "@/app/_components/pages/dashboard/PageEditPage";
+import { redirect } from "next/navigation";
+
 import { getNote } from "@/app/_libs/note";
 import { getPageBySlug } from "@/app/_libs/page";
-import { redirect } from "next/navigation";
+import AuthWrapper from "@/app/_components/AuthWrapper";
+import PageEditPage from "@/app/_components/pages/dashboard/PageEditPage";
 
 export async function generateMetadata({
   params,

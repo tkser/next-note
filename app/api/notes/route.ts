@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
 
 import { loginWithToken } from "@/app/_libs/auth";
-import { createNote, getNote } from "@/app/_libs/note";
 import { makeResponse } from "@/app/_utils/response";
+import { createNote, getNote } from "@/app/_libs/note";
+
 
 export async function POST(request: NextRequest) {
   try {

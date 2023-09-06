@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 
 import { loginWithToken } from "@/app/_libs/auth";
-import { updateNote, getNoteById } from "@/app/_libs/note";
 import { makeResponse } from "@/app/_utils/response";
+import { updateNote, getNoteById } from "@/app/_libs/note";
 
 export async function PUT(
   request: NextRequest,

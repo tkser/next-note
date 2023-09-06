@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-import InitializePage from "@/app/_components/pages/dashboard/InitializePage";
 import { checkIfInitialized } from "@/app/_libs/database";
+import InitializePage from "@/app/_components/pages/dashboard/InitializePage";
 
 export const metadata = {
   title: "Initialize | Note",

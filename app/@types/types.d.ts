@@ -122,4 +122,4 @@ type TableOfContent = {
 type Article = {
   contentHtml: string;
   tableOfContents: TableOfContent[];
-}
+};

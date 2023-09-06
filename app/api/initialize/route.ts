@@ -1,9 +1,9 @@
 import { db } from "@vercel/postgres";
 import { NextRequest } from "next/server";
 
+import { makeResponse } from "@/app/_utils/response";
 import { generatePasswordHash } from "@/app/_utils/auth";
 import { checkIfInitialized } from "@/app/_libs/database";
-import { makeResponse } from "@/app/_utils/response";
 
 export async function POST(request: NextRequest) {
   try {

@@ -1,10 +1,11 @@
-import PageViewer from "@/app/_components/pages/PageViewer";
-import { getNote } from "@/app/_libs/note";
-import { getPage, getPageBySlug } from "@/app/_libs/page";
-import { notFound } from "next/navigation";
-import markdownHtml from 'zenn-markdown-html';
 import { JSDOM } from "jsdom";
+import { notFound } from "next/navigation";
+import markdownHtml from "zenn-markdown-html";
+
+import { getNote } from "@/app/_libs/note";
 import AuthWrapper from "@/app/_components/AuthWrapper";
+import { getPage, getPageBySlug } from "@/app/_libs/page";
+import PageViewer from "@/app/_components/pages/PageViewer";
 
 export async function generateMetadata({
   params,
@@ -15,14 +16,18 @@ export async function generateMetadata({
   if (!page) {
     return {
       title: `Note`,
-    }
+    };
   }
   return {
     title: `${page.title} | Note`,
   };
 }
 
-const Page = async ({ params }: { params: { noteSlug: string, pageSlug: string } }) => {
+const Page = async ({
+  params,
+}: {
+  params: { noteSlug: string; pageSlug: string };
+}) => {
   const { noteSlug, pageSlug } = params;
   const note = await getNote(noteSlug);
   if (!note) {
@@ -35,7 +40,7 @@ const Page = async ({ params }: { params: { noteSlug: string, pageSlug: string }
   const article: Article = {
     contentHtml: markdownHtml(page.content),
     tableOfContents: [],
-  }
+  };
   const domHtml = new JSDOM(article.contentHtml).window.document;
   const elements = domHtml.querySelectorAll<HTMLElement>("h1, h2");
   elements.forEach((element) => {
@@ -43,9 +48,11 @@ const Page = async ({ params }: { params: { noteSlug: string, pageSlug: string }
     const title = element.innerHTML.split("</a> ")[1];
     const href = `#${element.id}`;
     article.tableOfContents.push({
-      level, title, href
-    })
-  })
+      level,
+      title,
+      href,
+    });
+  });
   return (
     <>
       {page.is_private ? (
