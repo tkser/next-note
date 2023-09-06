@@ -22,7 +22,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
     isPrivate: note.is_private,
   });
 
-  const handleSaveNote = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSaveNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors([]);
     const data = {
@@ -32,13 +32,35 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
       is_private,
     };
     try {
-      fetch(`/api/notes/${note.note_id}`, {
+      const res = await fetch(`/api/notes/${note.note_id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
+      const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
+      if (json.meta.message === "SUCCESS") {
+        if (json.data) {
+          note.title = json.data.note.title;
+          note.slug = json.data.note.slug;
+          note.summary = json.data.note.summary;
+          note.is_private = json.data.note.is_private;
+          note.updated_at = json.data.note.updated_at;
+          setTitle(note.title);
+          setSlug(note.slug);
+          setSummary(note.summary);
+          setIsPrivate(note.is_private);
+        } else {
+          setErrors(["Something went wrong."]);
+        }
+      } else if (json.meta.message === "BAD_REQUEST") {
+        setErrors(["Invalid data."]);
+      } else if (json.meta.message === "SLUG_CONFLICT") {
+        setErrors(["Slug is already taken."]);
+      } else {
+        setErrors(["Something went wrong."]);
+      }
     } catch (err) {
       setErrors(["Something went wrong."]);
     }

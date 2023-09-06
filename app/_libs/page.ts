@@ -53,6 +53,22 @@ async function getPage(note_id: string, slug: string): Promise<Page | null> {
   return row2Page(page);
 }
 
+async function getPageById(page_id: string): Promise<Page | null> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    SELECT * FROM pages WHERE page_id = $1 AND is_deleted = false;
+  `,
+    [page_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return null;
+  }
+  const page = rows[0];
+  return row2Page(page);
+}
+
 async function getPageBySlug(
   note_slug: string,
   page_slug: string,
@@ -91,10 +107,38 @@ async function createPage(
   return row2Page(page);
 }
 
+async function updatePage(
+  page_id: string,
+  title: string,
+  slug: string,
+  content: string,
+  is_private: boolean,
+  position: number,
+): Promise<Page | null> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    UPDATE pages
+    SET title = $1, slug = $2, content = $3, is_private = $4, position = $5
+    WHERE page_id = $6
+    RETURNING *;
+  `,
+    [title, slug, content, is_private, position, page_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return null;
+  }
+  const page = rows[0];
+  return row2Page(page);
+}
+
 export {
   getPagesByNoteId,
   getPagesByNoteSlug,
   getPage,
+  getPageById,
   getPageBySlug,
   createPage,
+  updatePage,
 };

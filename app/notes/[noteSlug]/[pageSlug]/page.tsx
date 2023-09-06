@@ -36,7 +36,7 @@ const Page = async ({ params }: { params: { noteSlug: string, pageSlug: string }
     contentHtml: markdownHtml(page.content),
     tableOfContents: [],
   }
-  const domHtml = new JSDOM(page.content).window.document;
+  const domHtml = new JSDOM(article.contentHtml).window.document;
   const elements = domHtml.querySelectorAll<HTMLElement>("h1, h2");
   elements.forEach((element) => {
     const level = element.tagName;

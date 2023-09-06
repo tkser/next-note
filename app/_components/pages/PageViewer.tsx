@@ -14,9 +14,9 @@ const PageViewer = ({ note, page, article }: PageViewerProps) => {
     import("zenn-embed-elements");
   });
   return (
-    <div className="grow bg-gray-100 max-w-screen-lg mx-auto px-6 py-6 w-full">
+    <div className="grow bg-gray-100 max-w-[1170px] mx-auto px-6 py-6 w-full">
       <div className="flex flex-row">
-        <div className="w-auto md:w-[calc(100%_-_18rem)] p-10 mr-3 shadow-md rounded-xl bg-white">
+        <div className="w-full md:w-[calc(100%_-_18rem)] p-10 md:mr-3 shadow-md rounded-xl bg-white text-gray-700">
           <p className="text-gray-700 mb-2 flex gap-1">
             <Link href={`/notes/${note.slug}`}>
               <span className="underline">{note.slug}</span>
@@ -40,23 +40,24 @@ const PageViewer = ({ note, page, article }: PageViewerProps) => {
               <p className="text-xl text-bold mb-4 text-gray-700">
                 目次
               </p>
-              <ul className="ul_h1 ul_h2">
+              <ol className="relative border-l-2 border-gray-200 pl-4">
                 {article.tableOfContents.map((anchor: TableOfContent) => {
                   if (anchor.level === "H1") {
                     return (
-                      <li className="li_h1" key={anchor.href}>
-                        <a href={anchor.href}>{anchor.title}</a>
+                      <li className="" key={anchor.href}>
+                        <div className="absolute w-3 h-3 bg-blue-400 rounded-full mt-1.5 -left-[7px] border border-white"></div>
+                        <a className="mb-4 text-base text-gray-500 dark:text-gray-700 font-semibold" href={anchor.href}>{anchor.title}</a>
                       </li>
                     );
                   } else {
                     return (
-                      <li className="li_h2" key={anchor.href}>
-                        <a href={anchor.href}>{anchor.title}</a>
+                      <li className="" key={anchor.href}>
+                        <a className="mb-4 text-base font-normal text-gray-500 dark:text-gray-700" href={anchor.href}>{anchor.title}</a>
                       </li>
                     );
                   }
                 })}
-              </ul>
+              </ol>
             </div>
           </div>
         </div>
