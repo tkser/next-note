@@ -1,11 +1,22 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-const Page = () => {
-  return (
-    <div>
-      <h1>login</h1>
-    </div>
-  );
+import { loginWithToken } from "@/app/_libs/auth";
+import LoginPage from "@/app/_components/pages/dashboard/LoginPage";
+
+export const metadata = {
+  title: "Login | Note",
 };
 
-export default Page;
+const Login = async () => {
+  const token = cookies().get("token");
+  if (token) {
+    const user = await loginWithToken(token.value);
+    if (user) {
+      return redirect("/dashboard");
+    }
+  }
+  return <LoginPage />;
+};
+
+export default Login;

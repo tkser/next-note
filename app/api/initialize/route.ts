@@ -1,109 +1,25 @@
 import { db } from "@vercel/postgres";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-import { generatePasswordHash } from "@/utils/auth";
-
-async function checkIfInitialized() {
-  const client = await db.connect();
-
-  const { rows } = await client.query(`
-    SELECT EXISTS (
-      SELECT 1
-      FROM information_schema.tables
-      WHERE table_name = 'users'
-    ) AS "users_table_exists",
-    EXISTS (
-      SELECT 1
-      FROM information_schema.tables
-      WHERE table_name = 'notes'
-    ) AS "notes_table_exists",
-    EXISTS (
-      SELECT 1
-      FROM information_schema.tables
-      WHERE table_name = 'pages'
-    ) AS "pages_table_exists";
-  `);
-  const { users_table_exists, notes_table_exists, pages_table_exists } =
-    rows[0];
-  if (!users_table_exists || !notes_table_exists || !pages_table_exists) {
-    await client.release();
-    return false;
-  }
-
-  const { rows: users } = await client.query(`
-    SELECT COUNT(*) AS "admin_user_count"
-    FROM users
-    WHERE role = 'admin';
-  `);
-  const { admin_user_count } = users[0];
-  if (admin_user_count === 0) {
-    await client.release();
-    return false;
-  }
-
-  await client.release();
-
-  return true;
-}
-
-export async function GET() {
-  try {
-    const initialized = await checkIfInitialized();
-    if (initialized) {
-      return NextResponse.json(
-        {
-          status: 200,
-          message: "INITIALIZED",
-        },
-        {
-          status: 200,
-        },
-      );
-    } else {
-      return NextResponse.json(
-        {
-          status: 200,
-          message: "NOT_INITIALIZED",
-        },
-        {
-          status: 200,
-        },
-      );
-    }
-  } catch (error) {
-    console.error("Error during initialization", error);
-    return NextResponse.json(
-      {
-        status: 500,
-        message: "INITIALIZATION_ERROR",
-      },
-      {
-        status: 500,
-      },
-    );
-  }
-}
+import { makeResponse } from "@/app/_utils/response";
+import { generatePasswordHash } from "@/app/_utils/auth";
+import { checkIfInitialized } from "@/app/_libs/database";
 
 export async function POST(request: NextRequest) {
   try {
+    const { username, password } =
+      (await request.json()) as InitializeApiRequest;
+
+    if (!username || !password) {
+      return makeResponse(400, "BAD_REQUEST");
+    }
+
     const initialized = await checkIfInitialized();
     if (initialized) {
-      return NextResponse.json(
-        {
-          status: 200,
-          message: "INITIALIZED",
-        },
-        {
-          status: 200,
-        },
-      );
+      return makeResponse(200, "INITIALIZED");
     }
 
     const client = await db.connect();
-    const { username, password } = (await request.json()) as {
-      username: string;
-      password: string;
-    };
     const { salt, hash } = await generatePasswordHash(password);
 
     await client.query(`
@@ -145,7 +61,7 @@ export async function POST(request: NextRequest) {
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) NOT NULL UNIQUE,
         content TEXT,
-        position INT,
+        position INT NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         is_private BOOLEAN NOT NULL DEFAULT FALSE,
@@ -190,25 +106,9 @@ export async function POST(request: NextRequest) {
 
     await client.release();
 
-    return NextResponse.json(
-      {
-        status: 201,
-        message: "INITIALIZED",
-      },
-      {
-        status: 201,
-      },
-    );
+    return makeResponse(201, "INITIALIZED");
   } catch (error) {
     console.error("Error during initialization", error);
-    return NextResponse.json(
-      {
-        status: 500,
-        message: "INITIALIZATION_ERROR",
-      },
-      {
-        status: 500,
-      },
-    );
+    return makeResponse(500, "INITIALIZATION_ERROR");
   }
 }
