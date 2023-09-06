@@ -4,7 +4,6 @@ import { loginWithToken } from "@/app/_libs/auth";
 import { makeResponse } from "@/app/_utils/response";
 import { createNote, getNote } from "@/app/_libs/note";
 
-
 export async function POST(request: NextRequest) {
   try {
     const reqJson = (await request.json()) as NoteApiRequest;
