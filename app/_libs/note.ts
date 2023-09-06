@@ -13,6 +13,19 @@ async function row2Note(row: NoteDatabaseRow): Promise<Note> {
   };
 }
 
+async function getNotesByUserId(user_id: string): Promise<Note[]> {
+  const client = await db.connect();
+  const { rows } = await client.query<NoteDatabaseRow>(
+    `
+    SELECT * FROM notes WHERE user_id = $1 AND is_deleted = false;
+  `,
+    [user_id],
+  );
+  await client.release();
+  const notes = await Promise.all(rows.map((row) => row2Note(row)));
+  return notes;
+}
+
 async function getNote(slug: string): Promise<Note | null> {
   const client = await db.connect();
   const { rows } = await client.query<NoteDatabaseRow>(
@@ -94,4 +107,4 @@ async function updateNote(
   return row2Note(note);
 }
 
-export { getNote, getNoteById, createNote, updateNote };
+export { getNotesByUserId, getNote, getNoteById, createNote, updateNote };
