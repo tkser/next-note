@@ -1,10 +1,10 @@
-"use client";
+import TopPage from "./_components/pages/TopPage";
+import { getNotes } from "@/app/_libs/note";
 
-const Page = () => {
+const Page = async () => {
+  const notes = await getNotes();
   return (
-    <div>
-      <h1>note</h1>
-    </div>
+    <TopPage notes={notes} />
   );
 };
 
