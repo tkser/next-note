@@ -14,7 +14,7 @@ export default function ToastProvider({ children }: ToastProviderProps) {
       {children}
       <ToastContainer
         position={toast.POSITION.BOTTOM_RIGHT}
-        autoClose={2000}
+        autoClose={3000}
         hideProgressBar
         pauseOnFocusLoss={false}
         theme="light"

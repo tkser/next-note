@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import markdownHtml from "zenn-markdown-html";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 type PageEditPageProps = {
   page: Page;
@@ -57,6 +58,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
             setTitle(page.title);
             setValue(page.content);
             router.refresh();
+            toast.success("Save successfully.");
           } else {
             setErrors(["Something went wrong."]);
           }
