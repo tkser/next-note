@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import "zenn-content-css";
-import Layout from "./_components/layout";
+
+import Layout from "@/app/_components/layout";
+import ToastProvider from "@/app/_providor/ToastProvidor";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <Layout>{children}</Layout>
+        <ToastProvider>
+          <Layout>{children}</Layout>
+        </ToastProvider>
       </body>
     </html>
   );
