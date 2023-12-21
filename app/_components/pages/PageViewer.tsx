@@ -18,6 +18,7 @@ const PageViewer = ({ note, page, article }: PageViewerProps) => {
       <div className="flex flex-row">
         <div className="w-full md:w-[calc(100%_-_18rem)] p-10 md:mr-3 shadow-md rounded-xl bg-white text-gray-700">
           <p className="text-gray-700 mb-2 flex gap-1">
+            <span className="select-none">{(note.is_private || page.is_private) && "🔒"}</span>
             <Link href={`/notes/${note.slug}`}>
               <span className="underline">{note.slug}</span>
             </Link>
