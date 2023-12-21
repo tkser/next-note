@@ -4,7 +4,7 @@ import markdownHtml from "zenn-markdown-html";
 
 import { getNote } from "@/app/_libs/note";
 import AuthWrapper from "@/app/_components/AuthWrapper";
-import { getPage, getPageBySlug } from "@/app/_libs/page";
+import { getAroundPages, getPage, getPageBySlug } from "@/app/_libs/page";
 import PageViewer from "@/app/_components/pages/PageViewer";
 
 export async function generateMetadata({
@@ -37,6 +37,7 @@ const Page = async ({
   if (!page) {
     return notFound();
   }
+  const [prevPage, nextPage] = await getAroundPages(note.note_id, page.page_id);
   const article: Article = {
     contentHtml: markdownHtml(page.content),
     tableOfContents: [],
@@ -57,10 +58,10 @@ const Page = async ({
     <>
       {page.is_private ? (
         <AuthWrapper redirect="/" user_id={page.user_id}>
-          <PageViewer note={note} page={page} article={article} />
+          <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} />
         </AuthWrapper>
       ) : (
-        <PageViewer note={note} page={page} article={article} />
+        <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} />
       )}
     </>
   );

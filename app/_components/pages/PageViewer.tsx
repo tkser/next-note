@@ -7,33 +7,59 @@ type PageViewerProps = {
   note: Note;
   page: Page;
   article: Article;
+  prevPage: Page | null;
+  nextPage: Page | null;
 };
 
-const PageViewer = ({ note, page, article }: PageViewerProps) => {
+const PageViewer = ({ note, page, article, prevPage, nextPage }: PageViewerProps) => {
   useEffect(() => {
     import("zenn-embed-elements");
   });
   return (
     <div className="grow bg-gray-100 max-w-[1170px] mx-auto px-6 py-6 w-full">
       <div className="flex flex-row">
-        <div className="w-full md:w-[calc(100%_-_18rem)] p-10 md:mr-3 shadow-md rounded-xl bg-white text-gray-700">
-          <p className="text-gray-700 mb-2 flex gap-1">
-            <span className="select-none">{(note.is_private || page.is_private) && "🔒"}</span>
-            <Link href={`/notes/${note.slug}`}>
-              <span className="underline">{note.slug}</span>
-            </Link>
-            <span>/</span>
-            <Link href={`/notes/${note.slug}/${page.slug}`}>
-              <span className="underline">{page.slug}</span>
-            </Link>
-          </p>
-          <h1 className="text-2xl font-semibold mb-4 text-gray-700">
-            {page.title}
-          </h1>
-          <div
-            className="znc mt-10"
-            dangerouslySetInnerHTML={{ __html: article.contentHtml }}
-          />
+        <div className="w-full md:w-[calc(100%_-_18rem)] text-gray-700 flex flex-col gap-4">
+          <div className="p-10 rounded-xl bg-white md:mr-3 shadow-md">
+            <p className="text-gray-700 mb-2 flex gap-1">
+              <span className="select-none">{(note.is_private || page.is_private) && "🔒"}</span>
+              <Link href={`/notes/${note.slug}`}>
+                <span className="underline">{note.slug}</span>
+              </Link>
+              <span>/</span>
+              <Link href={`/notes/${note.slug}/${page.slug}`}>
+                <span className="underline">{page.slug}</span>
+              </Link>
+            </p>
+            <h1 className="text-2xl font-semibold mb-4 text-gray-700">
+              {page.title}
+            </h1>
+            <div
+              className="znc mt-10"
+              dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+            />
+          </div>
+          <div className="flex justify-between">
+            <div className="w-5/12">
+              {prevPage && (
+                <Link href={`/notes/${note.slug}/${prevPage.slug}`}>
+                  <div className="p-5 rounded-xl bg-white md:mr-3 shadow-md flex flex-col">
+                    <span>PREV</span>
+                    <span className="font-bold">{prevPage.title}</span>
+                  </div>
+                </Link>
+              )}
+            </div>
+            <div className="w-5/12">
+              {nextPage && (
+                <Link href={`/notes/${note.slug}/${nextPage.slug}`}>
+                  <div className="p-5 rounded-xl bg-white md:mr-3 shadow-md flex flex-col">
+                    <span>NEXT</span>
+                    <span className="font-bold">{nextPage.title}</span>
+                  </div>
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
         <div className="hidden md:block w-72 ml-3">
           <div className="flex flex-col sticky top-6">
