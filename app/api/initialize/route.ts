@@ -59,14 +59,15 @@ export async function POST(request: NextRequest) {
         page_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         note_id UUID REFERENCES notes(note_id),
         title VARCHAR(255) NOT NULL,
-        slug VARCHAR(255) NOT NULL UNIQUE,
+        slug VARCHAR(255) NOT NULL,
         content TEXT,
         position INT NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         is_private BOOLEAN NOT NULL DEFAULT FALSE,
         is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-        user_id UUID REFERENCES users(user_id)
+        user_id UUID REFERENCES users(user_id),
+        CONSTRAINT uq_note_page_slug UNIQUE (note_id, slug)
       );
     `);
 
