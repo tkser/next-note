@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 type NoteEditPageProps = {
   note: Note;
@@ -51,6 +52,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           setSlug(note.slug);
           setSummary(note.summary);
           setIsPrivate(note.is_private);
+          toast.success("Save Successful.");
         } else {
           setErrors(["Something went wrong."]);
         }
@@ -98,6 +100,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
       if (json.meta.message === "CREATED") {
         if (json.data) {
           setNotePages([...note_pages, json.data.page]);
+          toast.success("Add Successful.");
         } else {
           setErrors(["Something went wrong."]);
         }

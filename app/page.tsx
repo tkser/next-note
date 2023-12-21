@@ -1,4 +1,4 @@
-import TopPage from "./_components/pages/TopPage";
+import TopPage from "@/app/_components/pages/TopPage";
 import { getNotes } from "@/app/_libs/note";
 
 const Page = async () => {

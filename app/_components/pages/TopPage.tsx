@@ -19,6 +19,7 @@ const TopPage = ({ notes }: TopPageProps) => {
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold text-gray-700">
                   <Link href={`/notes/${note.slug}`}>
+                    <span className="select-none">{note.is_private && "🔒"}</span>
                     <span>{note.title}</span>
                   </Link>
                 </h2>

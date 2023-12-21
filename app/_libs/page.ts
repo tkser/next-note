@@ -82,6 +82,25 @@ async function getPageBySlug(
   return page;
 }
 
+async function getAroundPages(
+  note_id: string,
+  page_id: string,
+): Promise<[Page | null, Page | null]> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ORDER BY position ASC;
+  `,
+    [note_id],
+  );
+  await client.release();
+  const pages = await Promise.all(rows.map(row2Page));
+  const index = pages.findIndex((page) => page.page_id === page_id);
+  const prev = index > 0 ? pages[index - 1] : null;
+  const next = index < pages.length - 1 ? pages[index + 1] : null;
+  return [prev, next];
+}
+
 async function createPage(
   title: string,
   slug: string,
@@ -140,6 +159,7 @@ export {
   getPage,
   getPageById,
   getPageBySlug,
+  getAroundPages,
   createPage,
   updatePage,
 };
