@@ -22,7 +22,7 @@ const LoginPage = () => {
       body: JSON.stringify({ username, password }),
     });
     const data = (await res.json()) as ApiResponse<ApiDataUserResponse>;
-    if (data.meta.message === "LOGIN_SUCCESS") {
+    if (data.meta.message === "LOGIN_SUCCESS" && data.data && data.data.user) {
       window.location.href = "/dashboard";
     } else {
       if (data.meta.message === "INVALID_USERNAME_OR_PASSWORD") {
