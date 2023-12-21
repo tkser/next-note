@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 const LogoutPage = () => {
-  const router = useRouter();
-
   useEffect(() => {
     const logout = async () => {
       await fetch("/api/auth/logout");
-      router.push("/");
+      window.location.href = "/";
     };
     logout();
   });
