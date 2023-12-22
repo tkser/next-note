@@ -26,6 +26,7 @@ const CreateNotePage = () => {
 
       if (data.meta.message === "CREATED") {
         if (data.data) {
+          router.prefetch(`/dashboard/notes/${data.data.note.slug}`);
           router.push(`/dashboard/notes/${data.data.note.slug}`);
         } else {
           setErrors(["An error occurred. Please try again later"]);

@@ -77,7 +77,10 @@ const InitializePage = () => {
             <div className="mb-4 text-center">
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
-                onClick={() => router.push("/")}
+                onClick={() => {
+                  router.prefetch("/");
+                  router.push("/");
+                }}
               >
                 Go to Home
               </button>

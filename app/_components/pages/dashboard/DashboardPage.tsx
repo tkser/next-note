@@ -11,9 +11,11 @@ type DashboardPageProps = {
 const DashboardPage = ({ notes }: DashboardPageProps) => {
   const router = useRouter();
   const handleCreateNote = () => {
+    router.prefetch("/dashboard/notes/create");
     router.push("/dashboard/notes/create");
   };
   const handleEditNote = (slug: string) => {
+    router.prefetch(`/dashboard/notes/${slug}`);
     router.push(`/dashboard/notes/${slug}`);
   };
   return (
