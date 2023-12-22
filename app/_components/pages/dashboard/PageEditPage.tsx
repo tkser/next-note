@@ -84,7 +84,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
       <div className="container mx-auto p-4 bg-white flex flex-col">
         <div className="flex justify-between items-center flex-row-reverse">
           <button
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed select-none"
             onClick={handleSave}
             disabled={!savable}
           >
@@ -113,7 +113,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
                   className={`inline-block p-4 border-b-2 rounded-t-lg hover:border-gray-300 ${
                     isPreview
                       ? ""
-                      : "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold"
+                      : "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold select-none"
                   }`}
                   role="tab"
                   onClick={() => setIsPreview(false)}
@@ -125,7 +125,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
                 <button
                   className={`inline-block p-4 border-b-2 rounded-t-lg hover:border-gray-300 ${
                     isPreview
-                      ? "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold"
+                      ? "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold select-none"
                       : ""
                   }`}
                   role="tab"

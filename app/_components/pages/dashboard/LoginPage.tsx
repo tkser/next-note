@@ -65,7 +65,7 @@ const LoginPage = () => {
             <div className="mb-4 text-center">
               <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
               >
                 Login
               </button>

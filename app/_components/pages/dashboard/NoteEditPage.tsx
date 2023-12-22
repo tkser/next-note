@@ -186,7 +186,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 select-none"
           >
             Save
           </button>
@@ -196,7 +196,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
             Page List
           </h2>
           <button
-            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 mb-4"
+            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 mb-4 select-none"
             onClick={handleAddPage}
           >
             Add Page
@@ -260,14 +260,14 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
               <div className="mb-4 flex items-center">
                 <button
                   type="button"
-                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 mr-2"
+                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 mr-2 select-none"
                   onClick={handleAddPage}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 select-none"
                 >
                   Save
                 </button>

@@ -20,11 +20,11 @@ const DashboardPage = ({ notes }: DashboardPageProps) => {
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-semibold mb-4 text-gray-700">
+          <h1 className="text-2xl font-semibold mb-4 text-gray-700 select-none">
             My Notes
           </h1>
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded select-none"
             onClick={handleCreateNote}
           >
             Create
@@ -42,7 +42,7 @@ const DashboardPage = ({ notes }: DashboardPageProps) => {
                 </h2>
                 <div className="flex">
                   <button
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mr-2"
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mr-2 select-none"
                     onClick={() => handleEditNote(note.slug)}
                   >
                     Edit

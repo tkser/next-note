@@ -61,7 +61,7 @@ const InitializePage = () => {
               <div className="mb-4 text-center">
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
                 >
                   Initialize Database
                 </button>
@@ -76,7 +76,7 @@ const InitializePage = () => {
             </p>
             <div className="mb-4 text-center">
               <button
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
                 onClick={() => router.push("/")}
               >
                 Go to Home

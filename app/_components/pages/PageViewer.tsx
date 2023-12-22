@@ -56,7 +56,7 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
               {prevPage && (
                 <Link href={`/notes/${note.slug}/${prevPage.slug}`}>
                   <div className="p-5 rounded-xl bg-white md:mr-3 shadow-md flex flex-col">
-                    <span>PREV</span>
+                    <span className="select-none">PREV</span>
                     <span className="font-bold">{prevPage.title}</span>
                   </div>
                 </Link>
@@ -66,7 +66,7 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
               {nextPage && (
                 <Link href={`/notes/${note.slug}/${nextPage.slug}`}>
                   <div className="p-5 rounded-xl bg-white md:mr-3 shadow-md flex flex-col">
-                    <span>NEXT</span>
+                    <span className="select-none">NEXT</span>
                     <span className="font-bold">{nextPage.title}</span>
                   </div>
                 </Link>
@@ -77,7 +77,7 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
         <div className="hidden md:block w-72 ml-3">
           <div className="flex flex-col sticky top-6">
             <div className="p-4 shadow-md rounded-xl mb-6 bg-white">
-              <p className="text-xl text-bold mb-4 text-gray-700">Content</p>
+              <p className="text-xl text-bold mb-4 text-gray-700 select-none">Content</p>
               <ol className="relative border-l-2 border-gray-200 pl-4">
                 {article.tableOfContents.map((anchor: TableOfContent) => {
                   if (anchor.level === "H1") {

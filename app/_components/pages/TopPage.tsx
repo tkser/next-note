@@ -12,7 +12,7 @@ const TopPage = ({ notes }: TopPageProps) => {
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-semibold mb-4 text-gray-700">Notes</h1>
+          <h1 className="text-2xl font-semibold mb-4 text-gray-700 select-none">Notes</h1>
         </div>
         <ul>
           {notes.map((note) => (

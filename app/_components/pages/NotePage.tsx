@@ -41,7 +41,7 @@ const NotePage = ({ note, pages, author }: NotePageProps) => {
           </div>
         </div>
         <div className="mb-4">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Pages</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 select-none">Pages</h2>
           <ul className="space-y-2 border-2 border-gray-300 p-4">
             {pages.map((page) => (
               <li
