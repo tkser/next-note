@@ -5,9 +5,10 @@ import Link from "next/link";
 type NotePageProps = {
   note: Note;
   pages: Page[];
+  author: User | null;
 };
 
-const NotePage = ({ note, pages }: NotePageProps) => {
+const NotePage = ({ note, pages, author }: NotePageProps) => {
   return (
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
@@ -23,9 +24,16 @@ const NotePage = ({ note, pages }: NotePageProps) => {
           <h1 className="text-2xl font-semibold mb-4 text-gray-700">
             {note.title}
           </h1>
-          <div className="text-gray-500 text-sm mb-4 flex gap-3">
-            <span>Created: {note.created_at.toLocaleString()}</span>
-            <span>Updated: {note.updated_at.toLocaleString()}</span>
+          <div className="text-gray-500 text-sm mb-4 flex flex-col">
+            <p className="flex flex-row gap-3">
+              <span>Created: {note.created_at.toLocaleString()}</span>
+              <span>Updated: {note.updated_at.toLocaleString()}</span>
+            </p>
+            {author && (
+              <p className="flex flex-row gap-3">
+                <span>Author: {author.username}</span>
+              </p>
+            )}
           </div>
           <div className="mb-2 text-gray-700">
             <p>{note.summary}</p>

@@ -6,6 +6,7 @@ import { getNote } from "@/app/_libs/note";
 import AuthWrapper from "@/app/_components/AuthWrapper";
 import { getAroundPages, getPage, getPageBySlug } from "@/app/_libs/page";
 import PageViewer from "@/app/_components/pages/PageViewer";
+import { getUser } from "@/app/_libs/user";
 
 export async function generateMetadata({
   params,
@@ -42,6 +43,7 @@ const Page = async ({
     contentHtml: markdownHtml(page.content),
     tableOfContents: [],
   };
+  const author = await getUser(page.user_id);
   const domHtml = new JSDOM(article.contentHtml).window.document;
   const elements = domHtml.querySelectorAll<HTMLElement>("h1, h2");
   elements.forEach((element) => {
@@ -58,10 +60,10 @@ const Page = async ({
     <>
       {page.is_private ? (
         <AuthWrapper redirect="/" user_id={page.user_id}>
-          <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} />
+          <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} author={author} />
         </AuthWrapper>
       ) : (
-        <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} />
+        <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} author={author} />
       )}
     </>
   );

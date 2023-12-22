@@ -9,9 +9,10 @@ type PageViewerProps = {
   article: Article;
   prevPage: Page | null;
   nextPage: Page | null;
+  author: User | null;
 };
 
-const PageViewer = ({ note, page, article, prevPage, nextPage }: PageViewerProps) => {
+const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageViewerProps) => {
   useEffect(() => {
     import("zenn-embed-elements");
   });
@@ -33,10 +34,17 @@ const PageViewer = ({ note, page, article, prevPage, nextPage }: PageViewerProps
             <h1 className="text-2xl font-semibold mb-4 text-gray-700">
               {page.title}
             </h1>
-            <p className="text-gray-500 text-sm mb-4 flex gap-3">
-              <span>Created: {page.created_at.toLocaleString()}</span>
-              <span>Updated: {page.updated_at.toLocaleString()}</span>
-            </p>
+            <div className="text-gray-500 text-sm mb-4 flex flex-col">
+              <p className="flex flex-row gap-3">
+                <span>Created: {page.created_at.toLocaleString()}</span>
+                <span>Updated: {page.updated_at.toLocaleString()}</span>
+              </p>
+              {author && (
+                <p className="flex flex-row">
+                  <span>Author: {author.username}</span>
+                </p>
+              )}
+            </div>
             <div
               className="znc mt-10"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
