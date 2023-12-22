@@ -153,6 +153,42 @@ async function updatePage(
   return row2Page(page);
 }
 
+async function deletePage(page_id: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    UPDATE pages
+    SET is_deleted = true
+    WHERE page_id = $1
+    RETURNING *;
+  `,
+    [page_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
+}
+
+async function deletePagesByNoteId(note_id: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    UPDATE pages
+    SET is_deleted = true
+    WHERE note_id = $1
+    RETURNING *;
+  `,
+    [note_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
+}
+
 export {
   getPagesByNoteId,
   getPagesByNoteSlug,
@@ -162,4 +198,6 @@ export {
   getAroundPages,
   createPage,
   updatePage,
+  deletePage,
+  deletePagesByNoteId,
 };

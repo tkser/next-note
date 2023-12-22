@@ -18,7 +18,7 @@ const InitializePage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
-        next: { revalidate: 60 },
+        next: { revalidate: false },
       });
       const data = await response.json();
 

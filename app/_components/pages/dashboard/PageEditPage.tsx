@@ -44,7 +44,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
               position: page.position,
               is_private: page.is_private,
             }),
-            next: { revalidate: 60 },
+            next: { revalidate: false },
           },
         );
         const json = (await res.json()) as ApiResponse<ApiDataPageResponse>;

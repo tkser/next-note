@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 
 import { loginWithToken } from "@/app/_libs/auth";
 import { makeResponse } from "@/app/_utils/response";
-import { updateNote, getNoteById } from "@/app/_libs/note";
+import { updateNote, getNoteById, deleteNoteAndPages } from "@/app/_libs/note";
 
 export async function PUT(
   request: NextRequest,
@@ -61,6 +61,44 @@ export async function PUT(
       note: updatedNote,
     });
   } catch (error) {
+    return makeResponse(500, "INTERNAL_SERVER_ERROR");
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { noteId: string } },
+) {
+  try {
+    const noteId = params.noteId;
+
+    const token = request.cookies.get("token");
+    if (!token) {
+      return makeResponse(401, "UNAUTHORIZED");
+    }
+
+    const user = await loginWithToken(token.value);
+    if (!user) {
+      return makeResponse(401, "UNAUTHORIZED");
+    }
+
+    const note = await getNoteById(noteId);
+    if (!note) {
+      return makeResponse(404, "NOT_FOUND");
+    }
+    if (note.user_id !== user.user_id) {
+      return makeResponse(403, "FORBIDDEN");
+    }
+
+    const deletedNote = await deleteNoteAndPages(note.note_id);
+
+    if (!deletedNote) {
+      return makeResponse(500, "INTERNAL_SERVER_ERROR");
+    }
+
+    return makeResponse(200, "SUCCESS");
+  }
+  catch (error) {
     return makeResponse(500, "INTERNAL_SERVER_ERROR");
   }
 }

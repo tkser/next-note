@@ -20,7 +20,7 @@ const LoginPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
-      next: { revalidate: 60 },
+      next: { revalidate: false },
     });
     const data = (await res.json()) as ApiResponse<ApiDataUserResponse>;
     if (data.meta.message === "LOGIN_SUCCESS" && data.data && data.data.user) {
