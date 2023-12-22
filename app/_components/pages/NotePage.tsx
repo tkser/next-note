@@ -17,7 +17,7 @@ const NotePage = ({ note, pages, author }: NotePageProps) => {
           <p className="text-gray-700 mb-2 flex gap-1 items-center">
             <span className="select-none">{note.is_private && <BiSolidLockAlt />}</span>
             <span className="underline">
-              <Link href={`/notes/${note.slug}`}>
+              <Link href="/notes/[noteSlug]" as={`/notes/${note.slug}`}>
                 {note.slug}
               </Link>
             </span>
@@ -49,7 +49,7 @@ const NotePage = ({ note, pages, author }: NotePageProps) => {
                 key={page.page_id}
               >
                 <span>{page.position.toString().padStart(2, "0")}</span>
-                <Link href={`/notes/${note.slug}/${page.slug}`}>
+                <Link href="/notes/[noteSlug]/[pageSlug]" as={`/notes/${note.slug}/${page.slug}`}>
                   <span>{page.title}</span>
                 </Link>
               </li>

@@ -284,7 +284,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
                 key={page.page_id}
               >
                 <span>{page.position.toString().padStart(2, "0")}</span>
-                <Link href={`/dashboard/notes/${note.slug}/${page.slug}`}>
+                <Link href="/dashboard/notes/[noteSlug]/[pageSlug]" as={`/dashboard/notes/${note.slug}/${page.slug}`}>
                   <span className="hover:underline cursor-pointer font-semibold">
                     {page.title}
                   </span>

@@ -24,11 +24,11 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
           <div className="p-10 rounded-xl bg-white md:mr-3 shadow-md">
             <p className="text-gray-700 mb-2 flex gap-1 items-center">
               <span className="select-none">{(note.is_private || page.is_private) && <BiSolidLockAlt />}</span>
-              <Link href={`/notes/${note.slug}`}>
+              <Link href="/notes/[noteSlug]" as={`/notes/${note.slug}`}>
                 <span className="underline">{note.slug}</span>
               </Link>
               <span>/</span>
-              <Link href={`/notes/${note.slug}/${page.slug}`}>
+              <Link href="/notes/[noteSlug]/[pageSlug]" as={`/notes/${note.slug}/${page.slug}`}>
                 <span className="underline">{page.slug}</span>
               </Link>
             </p>
@@ -54,7 +54,7 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
           <div className="flex justify-between">
             <div className="w-5/12">
               {prevPage && (
-                <Link href={`/notes/${note.slug}/${prevPage.slug}`}>
+                <Link href="/notes/[noteSlug]/[pageSlug]" as={`/notes/${note.slug}/${prevPage.slug}`}>
                   <div className="p-5 rounded-xl bg-white md:mr-3 shadow-md flex flex-col">
                     <span className="select-none">PREV</span>
                     <span className="font-bold">{prevPage.title}</span>
@@ -64,7 +64,7 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
             </div>
             <div className="w-5/12">
               {nextPage && (
-                <Link href={`/notes/${note.slug}/${nextPage.slug}`}>
+                <Link href="/notes/[noteSlug]/[pageSlug]" as={`/notes/${note.slug}/${nextPage.slug}`}>
                   <div className="p-5 rounded-xl bg-white md:mr-3 shadow-md flex flex-col">
                     <span className="select-none">NEXT</span>
                     <span className="font-bold">{nextPage.title}</span>
