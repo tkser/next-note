@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { BiSolidLockAlt } from "react-icons/bi";
 
 type PageViewerProps = {
   note: Note;
@@ -21,8 +22,8 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
       <div className="flex flex-row">
         <div className="w-full md:w-[calc(100%_-_18rem)] text-gray-700 flex flex-col gap-4">
           <div className="p-10 rounded-xl bg-white md:mr-3 shadow-md">
-            <p className="text-gray-700 mb-2 flex gap-1">
-              <span className="select-none">{(note.is_private || page.is_private) && "🔒"}</span>
+            <p className="text-gray-700 mb-2 flex gap-1 items-center">
+              <span className="select-none">{(note.is_private || page.is_private) && <BiSolidLockAlt />}</span>
               <Link href={`/notes/${note.slug}`}>
                 <span className="underline">{note.slug}</span>
               </Link>

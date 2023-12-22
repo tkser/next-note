@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BiSolidLockAlt } from "react-icons/bi";
 
 type NotePageProps = {
   note: Note;
@@ -13,8 +14,8 @@ const NotePage = ({ note, pages, author }: NotePageProps) => {
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
         <div className="mb-4">
-          <p className="text-gray-700 mb-2">
-            <span className="select-none">{note.is_private && "🔒"}</span>
+          <p className="text-gray-700 mb-2 flex gap-1 items-center">
+            <span className="select-none">{note.is_private && <BiSolidLockAlt />}</span>
             <span className="underline">
               <Link href={`/notes/${note.slug}`}>
                 {note.slug}
