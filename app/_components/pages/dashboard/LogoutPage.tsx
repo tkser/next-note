@@ -5,7 +5,7 @@ import { useEffect } from "react";
 const LogoutPage = () => {
   useEffect(() => {
     const logout = async () => {
-      await fetch("/api/auth/logout");
+      await fetch("/api/auth/logout", {next: { revalidate: 60 }});
       window.location.href = "/";
     };
     logout();

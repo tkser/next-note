@@ -21,6 +21,7 @@ const CreateNotePage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ title, slug, summary, is_private }),
+        next: { revalidate: 60 },
       });
       const data = (await response.json()) as ApiResponse<ApiDataNoteResponse>;
 

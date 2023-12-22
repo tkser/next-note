@@ -39,6 +39,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        next: { revalidate: 60 },
       });
       const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
       if (json.meta.message === "SUCCESS") {
@@ -93,6 +94,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        next: { revalidate: 60 },
       });
       setShowAddPageForm(false);
       setFormData({ title: "", slug: "", isPrivate: false });
