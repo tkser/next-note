@@ -23,6 +23,10 @@ const NotePage = ({ note, pages }: NotePageProps) => {
           <h1 className="text-2xl font-semibold mb-4 text-gray-700">
             {note.title}
           </h1>
+          <div className="text-gray-500 text-sm mb-4 flex gap-3">
+            <span>Created: {note.created_at.toLocaleString()}</span>
+            <span>Updated: {note.updated_at.toLocaleString()}</span>
+          </div>
           <div className="mb-2 text-gray-700">
             <p>{note.summary}</p>
           </div>
