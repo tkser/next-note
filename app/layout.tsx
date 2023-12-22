@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "zenn-content-css";
 
 import Layout from "@/app/_components/layout";
-import ToastProvider from "@/app/_providor/ToastProvidor";
+import ToastProvider from "@/app/_providor/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
