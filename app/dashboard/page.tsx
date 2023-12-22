@@ -19,7 +19,7 @@ const Dashboard = async () => {
   if (!user) {
     return redirect("/dashboard/login");
   }
-  const notes = await getNotesByUserId(user.user_id);
+  const notes = await getNotesByUserId(user.user_id, true);
   return (
     <AuthWrapper>
       <DashboardPage notes={notes} />

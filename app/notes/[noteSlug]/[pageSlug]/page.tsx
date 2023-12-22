@@ -24,6 +24,23 @@ export async function generateMetadata({
   };
 }
 
+const PageWrapper = async ({
+  note,
+  page,
+  article,
+  author,
+  auth,
+}: {
+  note: Note;
+  page: Page;
+  article: Article;
+  author: User | null;
+  auth: boolean;
+}) => {
+  const [prevPage, nextPage] = await getAroundPages(note.note_id, page.page_id, auth);
+  return <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} author={author} />;
+}
+
 const Page = async ({
   params,
 }: {
@@ -38,7 +55,6 @@ const Page = async ({
   if (!page) {
     return notFound();
   }
-  const [prevPage, nextPage] = await getAroundPages(note.note_id, page.page_id);
   const article: Article = {
     contentHtml: markdownHtml(page.content),
     tableOfContents: [],
@@ -60,10 +76,10 @@ const Page = async ({
     <>
       {page.is_private ? (
         <AuthWrapper redirect="/" user_id={page.user_id}>
-          <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} author={author} />
+          <PageWrapper note={note} page={page} article={article} author={author} auth={true} />
         </AuthWrapper>
       ) : (
-        <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} author={author} />
+        <PageWrapper note={note} page={page} article={article} author={author} auth={false} />
       )}
     </>
   );

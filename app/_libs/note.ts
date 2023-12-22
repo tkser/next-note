@@ -32,11 +32,14 @@ async function getNotes(
   return notes;
 }
 
-async function getNotesByUserId(user_id: string): Promise<Note[]> {
+async function getNotesByUserId(
+  user_id: string,
+  show_private: boolean = false,
+): Promise<Note[]> {
   const client = await db.connect();
   const { rows } = await client.query<NoteDatabaseRow>(
     `
-    SELECT * FROM notes WHERE user_id = $1 AND is_deleted = false;
+    SELECT * FROM notes WHERE user_id = $1 AND is_deleted = false ${(show_private ? "" : "AND is_private = false")}
   `,
     [user_id],
   );
