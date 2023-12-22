@@ -76,7 +76,7 @@ const PageViewer = ({ note, page, article, prevPage, nextPage, author }: PageVie
         <div className="hidden md:block w-72 ml-3">
           <div className="flex flex-col sticky top-6">
             <div className="p-4 shadow-md rounded-xl mb-6 bg-white">
-              <p className="text-xl text-bold mb-4 text-gray-700">目次</p>
+              <p className="text-xl text-bold mb-4 text-gray-700">Content</p>
               <ol className="relative border-l-2 border-gray-200 pl-4">
                 {article.tableOfContents.map((anchor: TableOfContent) => {
                   if (anchor.level === "H1") {
