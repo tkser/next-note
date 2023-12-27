@@ -45,6 +45,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
               is_private: page.is_private,
             }),
             next: { revalidate: false },
+            credentials: "include",
           },
         );
         const json = (await res.json()) as ApiResponse<ApiDataPageResponse>;

@@ -19,6 +19,7 @@ const InitializePage = () => {
         },
         body: JSON.stringify({ username, password }),
         next: { revalidate: false },
+        credentials: "include",
       });
       const data = await response.json();
 

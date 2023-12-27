@@ -42,6 +42,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
         },
         body: JSON.stringify(data),
         next: { revalidate: false },
+        credentials: "include",
       });
       const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
       if (json.meta.message === "SUCCESS") {
@@ -80,6 +81,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           "Content-Type": "application/json",
         },
         next: { revalidate: false },
+        credentials: "include",
       });
       const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
       if (json.meta.message === "SUCCESS") {
@@ -110,6 +112,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           "Content-Type": "application/json",
         },
         next: { revalidate: false },
+        credentials: "include",
       });
       const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
       if (json.meta.message === "SUCCESS") {
@@ -140,6 +143,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
         },
         body: JSON.stringify(data),
         next: { revalidate: false },
+        credentials: "include",
       });
       setShowAddPageForm(false);
       setFormData({ title: "", slug: "", isPrivate: false });

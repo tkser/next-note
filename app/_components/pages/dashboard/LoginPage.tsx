@@ -1,11 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,10 +23,12 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ username, password }),
       next: { revalidate: false },
+      credentials: "include",
     });
     const data = (await res.json()) as ApiResponse<ApiDataUserResponse>;
     if (data.meta.message === "LOGIN_SUCCESS" && data.data && data.data.user) {
-      window.location.href = "/dashboard";
+      router.prefetch("/dashboard");
+      router.push("/dashboard");
     } else {
       if (data.meta.message === "INVALID_USERNAME_OR_PASSWORD") {
         setErrors(["Username or password is incorrect"]);

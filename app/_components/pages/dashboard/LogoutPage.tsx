@@ -1,12 +1,19 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const LogoutPage = () => {
+  const router = useRouter();
+
   useEffect(() => {
     const logout = async () => {
-      await fetch("/api/auth/logout", {next: { revalidate: false }});
-      window.location.href = "/";
+      await fetch("/api/auth/logout", {
+        next: { revalidate: false },
+        credentials: "include",
+      });
+      router.prefetch("/");
+      router.push("/");
     };
     logout();
   });

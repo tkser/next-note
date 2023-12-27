@@ -22,6 +22,7 @@ const CreateNotePage = () => {
         },
         body: JSON.stringify({ title, slug, summary, is_private }),
         next: { revalidate: false },
+        credentials: "include",
       });
       const data = (await response.json()) as ApiResponse<ApiDataNoteResponse>;
 
