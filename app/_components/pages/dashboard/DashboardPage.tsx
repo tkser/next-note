@@ -54,6 +54,13 @@ const DashboardPage = ({ notes }: DashboardPageProps) => {
             </li>
           ))}
         </ul>
+        <div className="flex justify-end mt-8">
+          <Link href="/dashboard/logout" as="/dashboard/logout">
+            <span className="text-red-500 hover:text-red-600 cursor-pointer select-none">
+              Logout
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   );

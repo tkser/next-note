@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -29,6 +30,8 @@ const LoginPage = () => {
     if (data.meta.message === "LOGIN_SUCCESS" && data.data && data.data.user) {
       router.prefetch("/dashboard");
       router.push("/dashboard");
+      router.refresh();
+      toast.success("Login Successful.");
     } else {
       if (data.meta.message === "INVALID_USERNAME_OR_PASSWORD") {
         setErrors(["Username or password is incorrect"]);

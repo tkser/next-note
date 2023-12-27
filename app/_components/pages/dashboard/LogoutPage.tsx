@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const LogoutPage = () => {
   const router = useRouter();
@@ -14,6 +15,8 @@ const LogoutPage = () => {
       });
       router.prefetch("/");
       router.push("/");
+      router.refresh();
+      toast.success("Logout Successful.");
     };
     logout();
   });
