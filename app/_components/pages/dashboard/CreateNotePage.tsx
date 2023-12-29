@@ -2,18 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const CreateNotePage = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [summary, setSummary] = useState("");
   const [is_private, setIsPrivate] = useState(false);
-  const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors([]);
     try {
       const response = await fetch("/api/notes", {
         method: "POST",
@@ -31,17 +30,17 @@ const CreateNotePage = () => {
           router.prefetch(`/dashboard/notes/${data.data.note.slug}`);
           router.push(`/dashboard/notes/${data.data.note.slug}`);
         } else {
-          setErrors(["An error occurred. Please try again later"]);
+          toast.error("An error occurred. Please try again later");
         }
       } else if (data.meta.message === "SLUG_CONFLICT") {
-        setErrors(["Slug already exists"]);
+        toast.error("Slug already exists");
       } else if (data.meta.message === "BAD_REQUEST") {
-        setErrors(["Bad request"]);
+        toast.error("Bad request");
       } else {
-        setErrors(["An error occurred. Please try again later"]);
+        toast.error("An error occurred. Please try again later");
       }
     } catch (error) {
-      setErrors(["An error occurred. Please try again later"]);
+      toast.error("An error occurred. Please try again later");
     }
   };
 
@@ -51,11 +50,6 @@ const CreateNotePage = () => {
         <h1 className="text-2xl font-semibold mb-4 text-gray-700">
           Create Note
         </h1>
-        <p className="text-sm mb-2 text-red-500">
-          {errors.map((error) => (
-            <span key={error}>{error}</span>
-          ))}
-        </p>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="title" className="block text-gray-600">

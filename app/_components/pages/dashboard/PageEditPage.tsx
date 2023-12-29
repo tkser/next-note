@@ -15,7 +15,6 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
   const [value, setValue] = useState(page.content);
   const [isPreview, setIsPreview] = useState(false);
   const [title, setTitle] = useState(page.title);
-  const [errors, setErrors] = useState<string[]>([]);
 
   const contentHtml = useMemo(() => {
     return markdownHtml(value);
@@ -27,7 +26,6 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.preventDefault();
-    setErrors([]);
     if (page.content !== value || page.title !== title) {
       try {
         const res = await fetch(
@@ -62,17 +60,17 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
             router.refresh();
             toast.success("Save successfully.");
           } else {
-            setErrors(["Something went wrong."]);
+            toast.error("Something went wrong.");
           }
         } else if (json.meta.message === "BAD_REQUEST") {
-          setErrors(["Invalid data."]);
+          toast.error("Invalid data.");
         } else if (json.meta.message === "SLUG_CONFLICT") {
-          setErrors(["Slug is already taken."]);
+          toast.error("Slug is already taken.");
         } else {
-          setErrors(["Something went wrong."]);
+          toast.error("Something went wrong.");
         }
       } catch (err) {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     }
   };
@@ -99,11 +97,6 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
             className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold grow mr-4"
           />
         </div>
-        <p className="text-sm mb-2 text-red-500">
-          {errors.map((error) => (
-            <span key={error}>{error}</span>
-          ))}
-        </p>
         <div className="mb-4 text-gray-600 grow flex flex-col">
           <div className="mb-4 border-b border-gray-200">
             <ul

@@ -8,15 +8,13 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginLoading, setIsLoginLoading] = useState(false);
-  const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors([]);
     setIsLoginLoading(true);
     if (!username || !password) {
-      setErrors(["Username and password are required"]);
+      toast.error("Username and password are required");
       return;
     }
     const res = await fetch("/api/auth/login", {
@@ -36,9 +34,9 @@ const LoginPage = () => {
       toast.success("Login Successful.");
     } else {
       if (data.meta.message === "INVALID_USERNAME_OR_PASSWORD") {
-        setErrors(["Username or password is incorrect"]);
+        toast.error("Username or password is incorrect");
       } else {
-        setErrors(["An error occurred. Please try again later"]);
+        toast.error("An error occurred. Please try again later");
       }
       setIsLoginLoading(false);
     }
@@ -51,11 +49,6 @@ const LoginPage = () => {
           Note
         </h1>
         <div>
-          <p className="text-sm mb-2 text-center text-red-500">
-            {errors.map((error) => (
-              <span key={error}>{error}</span>
-            ))}
-          </p>
           <form onSubmit={handleLogin}>
             <p className="mb-2 text-gray-500">Username:</p>
             <input

@@ -16,7 +16,6 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
   const [summary, setSummary] = useState(note.summary);
   const [is_private, setIsPrivate] = useState(note.is_private);
   const [note_pages, setNotePages] = useState(pages);
-  const [errors, setErrors] = useState<string[]>([]);
   const [showAddPageForm, setShowAddPageForm] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -27,7 +26,6 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
 
   const handleSaveNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors([]);
     const data = {
       title,
       slug,
@@ -58,22 +56,21 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           setIsPrivate(note.is_private);
           toast.success("Save Successful.");
         } else {
-          setErrors(["Something went wrong."]);
+          toast.error("Something went wrong.");
         }
       } else if (json.meta.message === "BAD_REQUEST") {
-        setErrors(["Invalid data."]);
+        toast.error("Invalid data.");
       } else if (json.meta.message === "SLUG_CONFLICT") {
-        setErrors(["Slug is already taken."]);
+        toast.error("Slug is already taken.");
       } else {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     } catch (err) {
-      setErrors(["Something went wrong."]);
+      toast.error("Something went wrong.");
     }
   };
   const handleRemoveNote = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setErrors([]);
     try {
       const res = await fetch(`/api/notes/${note.note_id}`, {
         method: "DELETE",
@@ -88,10 +85,10 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
         router.push("/dashboard");
         toast.success("Remove Successful.");
       } else {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     } catch (err) {
-      setErrors(["Something went wrong."]);
+      toast.error("Something went wrong.");
     }
   }
   const handleAddPage = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -104,7 +101,6 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
     }
   };
   const handleRemovePage = async (page_id: string) => {
-    setErrors([]);
     try {
       const res = await fetch(`/api/notes/${note.note_id}/pages/${page_id}`, {
         method: "DELETE",
@@ -119,15 +115,14 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
         setNotePages(note_pages.filter((page) => page.page_id !== page_id));
         toast.success("Remove Successful.");
       } else {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     } catch (err) {
-      setErrors(["Something went wrong."]);
+      toast.error("Something went wrong.");
     }
   }
   const handleAddPageSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors([]);
     const data = {
       title: formData.title,
       slug: formData.slug,
@@ -153,17 +148,17 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           setNotePages([...note_pages, json.data.page]);
           toast.success("Add Successful.");
         } else {
-          setErrors(["Something went wrong."]);
+          toast.error("Something went wrong.");
         }
       } else if (json.meta.message === "BAD_REQUEST") {
-        setErrors(["Invalid data."]);
+        toast.error("Invalid data.");
       } else if (json.meta.message === "SLUG_CONFLICT") {
-        setErrors(["Slug is already taken."]);
+        toast.error("Slug is already taken.");
       } else {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     } catch (err) {
-      setErrors(["Something went wrong."]);
+      toast.error("Something went wrong.");
     }
   };
 
@@ -171,11 +166,6 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
         <h1 className="text-2xl font-semibold mb-4 text-gray-700">Edit Note</h1>
-        <p className="text-sm mb-2 text-red-500">
-          {errors.map((error) => (
-            <span key={error}>{error}</span>
-          ))}
-        </p>
         <form onSubmit={handleSaveNote}>
           <div className="mb-4">
             <label htmlFor="note_title" className="block text-gray-600">
