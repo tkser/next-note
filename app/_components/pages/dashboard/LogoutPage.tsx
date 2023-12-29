@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const LogoutPage = () => {
   const router = useRouter();

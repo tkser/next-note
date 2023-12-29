@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type NoteEditPageProps = {
   note: Note;
@@ -90,7 +90,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
     } catch (err) {
       toast.error("Something went wrong.");
     }
-  }
+  };
   const handleAddPage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (showAddPageForm) {
@@ -120,7 +120,7 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
     } catch (err) {
       toast.error("Something went wrong.");
     }
-  }
+  };
   const handleAddPageSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
@@ -334,12 +334,18 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
                 key={page.page_id}
               >
                 <span>{page.position.toString().padStart(2, "0")}</span>
-                <Link href="/dashboard/notes/[noteSlug]/[pageSlug]" as={`/dashboard/notes/${note.slug}/${page.slug}`}>
+                <Link
+                  href="/dashboard/notes/[noteSlug]/[pageSlug]"
+                  as={`/dashboard/notes/${note.slug}/${page.slug}`}
+                >
                   <span className="hover:underline cursor-pointer font-semibold">
                     {page.title}
                   </span>
                 </Link>
-                <span className="text-sm text-red-500 cursor-pointer underline ml-auto" onClick={() => handleRemovePage(page.page_id)}>
+                <span
+                  className="text-sm text-red-500 cursor-pointer underline ml-auto"
+                  onClick={() => handleRemovePage(page.page_id)}
+                >
                   Remove
                 </span>
               </li>

@@ -17,11 +17,16 @@ async function row2Page(row: PageDatabaseRow): Promise<Page> {
   };
 }
 
-async function getPagesByNoteId(note_id: string, show_private: boolean = false): Promise<Page[]> {
+async function getPagesByNoteId(
+  note_id: string,
+  show_private: boolean = false,
+): Promise<Page[]> {
   const client = await db.connect();
   const { rows } = await client.query<PageDatabaseRow>(
     `
-    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ${show_private ? "" : "AND is_private = false"}
+    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ${
+      show_private ? "" : "AND is_private = false"
+    }
     ORDER BY position ASC;
   `,
     [note_id],
@@ -91,7 +96,9 @@ async function getAroundPages(
   const client = await db.connect();
   const { rows } = await client.query<PageDatabaseRow>(
     `
-    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ${show_private ? "" : "AND is_private = false"}
+    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ${
+      show_private ? "" : "AND is_private = false"
+    }
     ORDER BY position ASC;
   `,
     [note_id],

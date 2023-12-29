@@ -10,7 +10,5 @@ interface AuthProviderProps {
 export const AuthContext = createContext<User | null>(null);
 
 export default function AuthProvider({ user, children }: AuthProviderProps) {
-  return (
-    <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }

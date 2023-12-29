@@ -1,8 +1,8 @@
 "use client";
 
+import { useContext } from "react";
 import { useRouter } from "next/navigation";
 
-import { useContext } from "react";
 import { AuthContext } from "@/app/_providor/AuthProvider";
 
 type AuthWrapperProps = {
@@ -12,7 +12,7 @@ type AuthWrapperProps = {
   redirect?: string;
 };
 
-const AuthWrapper = async (props: AuthWrapperProps) => {
+const AuthWrapper = (props: AuthWrapperProps) => {
   const user = useContext(AuthContext);
   const router = useRouter();
 
@@ -20,16 +20,13 @@ const AuthWrapper = async (props: AuthWrapperProps) => {
   if (!user) {
     router.prefetch(redirect_uri);
     router.push(redirect_uri);
-  }
-  else if (props.role && user.role !== props.role) {
+  } else if (props.role && user.role !== props.role) {
     router.prefetch(redirect_uri);
     router.push(redirect_uri);
-  }
-  else if (props.user_id && user.user_id !== props.user_id) {
+  } else if (props.user_id && user.user_id !== props.user_id) {
     router.prefetch(redirect_uri);
     router.push(redirect_uri);
-  }
-  else {
+  } else {
     return <>{props.children}</>;
   }
   return <></>;

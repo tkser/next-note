@@ -1,4 +1,5 @@
 import { db } from "@vercel/postgres";
+
 import { deletePagesByNoteId } from "@/app/_libs/page";
 
 async function row2Note(row: NoteDatabaseRow): Promise<Note> {
@@ -39,7 +40,9 @@ async function getNotesByUserId(
   const client = await db.connect();
   const { rows } = await client.query<NoteDatabaseRow>(
     `
-    SELECT * FROM notes WHERE user_id = $1 AND is_deleted = false ${(show_private ? "" : "AND is_private = false")}
+    SELECT * FROM notes WHERE user_id = $1 AND is_deleted = false ${
+      show_private ? "" : "AND is_private = false"
+    }
   `,
     [user_id],
   );
@@ -129,9 +132,7 @@ async function updateNote(
   return row2Note(note);
 }
 
-async function _deleteNote(
-  note_id: string,
-): Promise<boolean> {
+async function _deleteNote(note_id: string): Promise<boolean> {
   const client = await db.connect();
   const { rows } = await client.query<NoteDatabaseRow>(
     `
@@ -149,9 +150,7 @@ async function _deleteNote(
   return true;
 }
 
-async function deleteNoteAndPages(
-  note_id: string,
-): Promise<boolean> {
+async function deleteNoteAndPages(note_id: string): Promise<boolean> {
   const deletedPages = await deletePagesByNoteId(note_id);
   if (!deletedPages) {
     return false;

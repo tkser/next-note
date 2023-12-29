@@ -97,8 +97,7 @@ export async function DELETE(
     }
 
     return makeResponse(200, "SUCCESS");
-  }
-  catch (error) {
+  } catch (error) {
     return makeResponse(500, "INTERNAL_SERVER_ERROR");
   }
 }

@@ -8,7 +8,9 @@ const Header = () => {
       <nav className="h-full flex items-center justify-between flex-wrap bg-gray-700 px-5 flex-row">
         <div className="flex items-center flex-shrink-0 text-white mr-6">
           <Link href="/" as="/">
-            <span className="font-semibold text-xl tracking-tight select-none">Note</span>
+            <span className="font-semibold text-xl tracking-tight select-none">
+              Note
+            </span>
           </Link>
         </div>
         <div className="block flex-grow flex items-center w-auto">

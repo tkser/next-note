@@ -31,7 +31,7 @@ const NotePage = ({ note, author }: NotePageProps) => {
       } catch (err) {
         setPages([]);
       }
-    }
+    };
     fetchPages();
   }, [note.note_id]);
   return (
@@ -39,7 +39,9 @@ const NotePage = ({ note, author }: NotePageProps) => {
       <div className="container mx-auto p-4 bg-white">
         <div className="mb-4">
           <p className="text-gray-700 mb-2 flex gap-1 items-center">
-            <span className="select-none">{note.is_private && <BiSolidLockAlt />}</span>
+            <span className="select-none">
+              {note.is_private && <BiSolidLockAlt />}
+            </span>
             <span className="underline">
               <Link href="/notes/[noteSlug]" as={`/notes/${note.slug}`}>
                 {note.slug}
@@ -65,16 +67,26 @@ const NotePage = ({ note, author }: NotePageProps) => {
           </div>
         </div>
         <div className="mb-4">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700 select-none">Pages</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 select-none">
+            Pages
+          </h2>
           <ul className="space-y-2 border-2 border-gray-300 p-4">
             {pages.map((page) => (
               <li
                 className="flex items-center mb-2 text-gray-700 border-b-2 border-gray-300 pb-1 gap-4"
                 key={page.page_id}
               >
-                <span className="w-5">{page.position.toString().padStart(2, "0")}</span>
-                <Link href="/notes/[noteSlug]/[pageSlug]" as={`/notes/${note.slug}/${page.slug}`} className="flex flex-row gap-1 items-center">
-                  <span className="select-none">{page.is_private && <BiSolidLockAlt />}</span>
+                <span className="w-5">
+                  {page.position.toString().padStart(2, "0")}
+                </span>
+                <Link
+                  href="/notes/[noteSlug]/[pageSlug]"
+                  as={`/notes/${note.slug}/${page.slug}`}
+                  className="flex flex-row gap-1 items-center"
+                >
+                  <span className="select-none">
+                    {page.is_private && <BiSolidLockAlt />}
+                  </span>
                   <span>{page.title}</span>
                 </Link>
               </li>

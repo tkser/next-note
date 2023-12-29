@@ -5,8 +5,6 @@ import { loginWithToken } from "@/app/_libs/auth";
 import { getNotesByUserId } from "@/app/_libs/note";
 import AuthWrapper from "@/app/_components/AuthWrapper";
 import DashboardPage from "@/app/_components/pages/dashboard/DashboardPage";
-import { Suspense } from "react";
-import Loading from "../_components/Loading";
 
 export const metadata = {
   title: "Dashboard | Note",

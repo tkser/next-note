@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 
 import { getNote } from "@/app/_libs/note";
+import { getUser } from "@/app/_libs/user";
 import NotePage from "@/app/_components/pages/NotePage";
 import AuthWrapper from "@/app/_components/AuthWrapper";
-import { getUser } from "@/app/_libs/user";
 
 export async function generateMetadata({
   params,

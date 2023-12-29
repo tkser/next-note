@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const CreateNotePage = () => {
   const [title, setTitle] = useState("");

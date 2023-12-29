@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server";
 
+import { getNoteById } from "@/app/_libs/note";
 import { loginWithToken } from "@/app/_libs/auth";
 import { makeResponse } from "@/app/_utils/response";
-import { createPage, getPage, getPageById, getPagesByNoteId } from "@/app/_libs/page";
-import { getNoteById } from "@/app/_libs/note";
+import { createPage, getPage, getPagesByNoteId } from "@/app/_libs/page";
 
 export async function GET(
   request: NextRequest,
@@ -28,22 +28,29 @@ export async function GET(
       return makeResponse(403, "FORBIDDEN");
     }
 
-    const pages = await getPagesByNoteId(params.noteId, note.is_private ? true : (user ? note.user_id === user.user_id : false));
+    const pages = await getPagesByNoteId(
+      params.noteId,
+      note.is_private ? true : user ? note.user_id === user.user_id : false,
+    );
 
-    return makeResponse<ApiDataPageDetailResponse[]>(200, "OK", pages.map((page) => ({
-      type: "pageDetail",
-      page: {
-        page_id: page.page_id,
-        note_id: page.note_id,
-        user_id: page.user_id,
-        title: page.title,
-        slug: page.slug,
-        position: page.position,
-        is_private: page.is_private,
-        created_at: page.created_at,
-        updated_at: page.updated_at,
-      }
-    })));
+    return makeResponse<ApiDataPageDetailResponse[]>(
+      200,
+      "OK",
+      pages.map((page) => ({
+        type: "pageDetail",
+        page: {
+          page_id: page.page_id,
+          note_id: page.note_id,
+          user_id: page.user_id,
+          title: page.title,
+          slug: page.slug,
+          position: page.position,
+          is_private: page.is_private,
+          created_at: page.created_at,
+          updated_at: page.updated_at,
+        },
+      })),
+    );
   } catch (error) {
     return makeResponse(500, "INTERNAL_SERVER_ERROR");
   }
