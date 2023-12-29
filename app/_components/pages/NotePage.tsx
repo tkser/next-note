@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BiSolidLockAlt } from "react-icons/bi";
+import Loading from "../Loading";
 
 type NotePageProps = {
   note: Note;
@@ -11,6 +12,8 @@ type NotePageProps = {
 
 const NotePage = ({ note, author }: NotePageProps) => {
   const [pages, setPages] = useState<Page[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchPages = async () => {
       try {
@@ -31,6 +34,7 @@ const NotePage = ({ note, author }: NotePageProps) => {
       } catch (err) {
         setPages([]);
       }
+      setIsLoading(false);
     };
     fetchPages();
   }, [note.note_id]);
@@ -71,26 +75,30 @@ const NotePage = ({ note, author }: NotePageProps) => {
             Pages
           </h2>
           <ul className="space-y-2 border-2 border-gray-300 p-4">
-            {pages.map((page) => (
-              <li
-                className="flex items-center mb-2 text-gray-700 border-b-2 border-gray-300 pb-1 gap-4"
-                key={page.page_id}
-              >
-                <span className="w-5">
-                  {page.position.toString().padStart(2, "0")}
-                </span>
-                <Link
-                  href="/notes/[noteSlug]/[pageSlug]"
-                  as={`/notes/${note.slug}/${page.slug}`}
-                  className="flex flex-row gap-1 items-center"
+            {isLoading ? (
+              <Loading />
+            ) : (
+              pages.map((page) => (
+                <li
+                  className="flex items-center mb-2 text-gray-700 border-b-2 border-gray-300 pb-1 gap-4"
+                  key={page.page_id}
                 >
-                  <span className="select-none">
-                    {page.is_private && <BiSolidLockAlt />}
+                  <span className="w-5">
+                    {page.position.toString().padStart(2, "0")}
                   </span>
-                  <span>{page.title}</span>
-                </Link>
-              </li>
-            ))}
+                  <Link
+                    href="/notes/[noteSlug]/[pageSlug]"
+                    as={`/notes/${note.slug}/${page.slug}`}
+                    className="flex flex-row gap-1 items-center"
+                  >
+                    <span className="select-none">
+                      {page.is_private && <BiSolidLockAlt />}
+                    </span>
+                    <span>{page.title}</span>
+                  </Link>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </div>

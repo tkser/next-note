@@ -67,6 +67,21 @@ async function getNote(slug: string): Promise<Note | null> {
   return row2Note(note);
 }
 
+async function checkNoteSlugConflict(slug: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<NoteDatabaseRow>(
+    `
+    SELECT * FROM notes WHERE slug = $1 ;
+  `,
+    [slug],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
+}
+
 async function getNoteById(note_id: string): Promise<Note | null> {
   const client = await db.connect();
   const { rows } = await client.query<NoteDatabaseRow>(
@@ -166,6 +181,7 @@ export {
   getNotes,
   getNotesByUserId,
   getNote,
+  checkNoteSlugConflict,
   getNoteById,
   createNote,
   updateNote,

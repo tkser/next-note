@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { getNoteById } from "@/app/_libs/note";
 import { loginWithToken } from "@/app/_libs/auth";
 import { makeResponse } from "@/app/_utils/response";
-import { createPage, getPage, getPagesByNoteId, page2detail } from "@/app/_libs/page";
+import { createPage, checkPageSlugConflict, getPagesByNoteId, page2detail } from "@/app/_libs/page";
 
 export async function GET(
   request: NextRequest,
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       return makeResponse(401, "UNAUTHORIZED");
     }
 
-    const slugCheck = await getPage(note_id, slug);
+    const slugCheck = await checkPageSlugConflict(note_id, slug);
 
     if (slugCheck) {
       return makeResponse(409, "SLUG_CONFLICT");

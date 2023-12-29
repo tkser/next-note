@@ -3,16 +3,19 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Loading from "../../Loading";
 
 const CreateNotePage = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [summary, setSummary] = useState("");
   const [is_private, setIsPrivate] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await fetch("/api/notes", {
         method: "POST",
@@ -42,6 +45,7 @@ const CreateNotePage = () => {
     } catch (error) {
       toast.error("An error occurred. Please try again later");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -50,72 +54,76 @@ const CreateNotePage = () => {
         <h1 className="text-2xl font-semibold mb-4 text-gray-700">
           Create Note
         </h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="title" className="block text-gray-600">
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              maxLength={127}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="slug" className="block text-gray-600">
-              Slug
-            </label>
-            <input
-              type="text"
-              id="slug"
-              name="slug"
-              className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              maxLength={127}
-              required
-              pattern="^[0-9a-zA-Z_-]+$"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="summary" className="block text-gray-600">
-              Summary
-            </label>
-            <textarea
-              id="summary"
-              name="summary"
-              className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
-              rows={3}
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
-              maxLength={300}
-            ></textarea>
-          </div>
-          <div className="mb-4 flex items-center">
-            <input
-              type="checkbox"
-              id="private"
-              name="private"
-              className="p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700 mr-2"
-              checked={is_private}
-              onChange={(e) => setIsPrivate(e.target.checked)}
-            />
-            <label htmlFor="private" className="block text-gray-600">
-              Private
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 select-none"
-          >
-            Create
-          </button>
-        </form>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label htmlFor="title" className="block text-gray-600">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                maxLength={127}
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="slug" className="block text-gray-600">
+                Slug
+              </label>
+              <input
+                type="text"
+                id="slug"
+                name="slug"
+                className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                maxLength={127}
+                required
+                pattern="^[0-9a-zA-Z_-]+$"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="summary" className="block text-gray-600">
+                Summary
+              </label>
+              <textarea
+                id="summary"
+                name="summary"
+                className="w-full border p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700"
+                rows={3}
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+                maxLength={300}
+              ></textarea>
+            </div>
+            <div className="mb-4 flex items-center">
+              <input
+                type="checkbox"
+                id="private"
+                name="private"
+                className="p-2 rounded focus:outline-none focus:border-blue-500 text-gray-700 mr-2"
+                checked={is_private}
+                onChange={(e) => setIsPrivate(e.target.checked)}
+              />
+              <label htmlFor="private" className="block text-gray-600">
+                Private
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 select-none"
+            >
+              Create
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

@@ -74,6 +74,21 @@ async function getPage(note_id: string, slug: string): Promise<Page | null> {
   return row2Page(page);
 }
 
+async function checkPageSlugConflict(note_id: string, slug: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    SELECT * FROM pages WHERE note_id = $1 AND slug = $2;
+  `,
+    [note_id, slug],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
+}
+
 async function getPageById(page_id: string): Promise<Page | null> {
   const client = await db.connect();
   const { rows } = await client.query<PageDatabaseRow>(
@@ -218,6 +233,7 @@ export {
   getPagesByNoteId,
   getPagesByNoteSlug,
   getPage,
+  checkPageSlugConflict,
   getPageById,
   getPageBySlug,
   getAroundPages,

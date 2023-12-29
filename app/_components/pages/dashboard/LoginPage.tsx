@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/_components/Loading";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -38,8 +39,8 @@ const LoginPage = () => {
       } else {
         toast.error("An error occurred. Please try again later");
       }
-      setIsLoginLoading(false);
     }
+    setIsLoginLoading(false);
   };
 
   return (
@@ -68,9 +69,7 @@ const LoginPage = () => {
             />
             <div className="mb-4 text-center">
               {isLoginLoading ? (
-                <div className="flex justify-center" aria-label="loading">
-                  <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-                </div>
+                <Loading />
               ) : (
                 <button
                   type="submit"

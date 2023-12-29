@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 
 import { loginWithToken } from "@/app/_libs/auth";
 import { makeResponse } from "@/app/_utils/response";
-import { createNote, getNote } from "@/app/_libs/note";
+import { createNote, checkNoteSlugConflict } from "@/app/_libs/note";
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       return makeResponse(401, "UNAUTHORIZED");
     }
 
-    const slugCheck = await getNote(slug);
+    const slugCheck = await checkNoteSlugConflict(slug);
 
     if (slugCheck) {
       return makeResponse(409, "SLUG_CONFLICT");
