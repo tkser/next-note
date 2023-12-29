@@ -17,6 +17,20 @@ async function row2Page(row: PageDatabaseRow): Promise<Page> {
   };
 }
 
+function page2detail(page: Page): PageDetail {
+  return {
+    page_id: page.page_id,
+    title: page.title,
+    slug: page.slug,
+    is_private: page.is_private,
+    created_at: page.created_at,
+    updated_at: page.updated_at,
+    user_id: page.user_id,
+    note_id: page.note_id,
+    position: page.position,
+  };
+}
+
 async function getPagesByNoteId(
   note_id: string,
   show_private: boolean = false,
@@ -200,6 +214,7 @@ async function deletePagesByNoteId(note_id: string): Promise<boolean> {
 }
 
 export {
+  page2detail,
   getPagesByNoteId,
   getPagesByNoteSlug,
   getPage,

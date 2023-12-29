@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { getNoteById } from "@/app/_libs/note";
 import { loginWithToken } from "@/app/_libs/auth";
 import { makeResponse } from "@/app/_utils/response";
-import { createPage, getPage, getPagesByNoteId } from "@/app/_libs/page";
+import { createPage, getPage, getPagesByNoteId, page2detail } from "@/app/_libs/page";
 
 export async function GET(
   request: NextRequest,
@@ -38,17 +38,7 @@ export async function GET(
       "OK",
       pages.map((page) => ({
         type: "pageDetail",
-        page: {
-          page_id: page.page_id,
-          note_id: page.note_id,
-          user_id: page.user_id,
-          title: page.title,
-          slug: page.slug,
-          position: page.position,
-          is_private: page.is_private,
-          created_at: page.created_at,
-          updated_at: page.updated_at,
-        },
+        page: page2detail(page),
       })),
     );
   } catch (error) {

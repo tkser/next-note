@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BiSolidLockAlt } from "react-icons/bi";
 
 type PageViewerProps = {
   note: Note;
   page: Page;
   article: Article;
-  prevPage: Page | null;
-  nextPage: Page | null;
   author: User | null;
 };
 
@@ -17,13 +15,39 @@ const PageViewer = ({
   note,
   page,
   article,
-  prevPage,
-  nextPage,
   author,
 }: PageViewerProps) => {
+  const [prevPage, setPrevPage] = useState<PageDetail | null>(null);
+  const [nextPage, setNextPage] = useState<PageDetail | null>(null);
+  
   useEffect(() => {
     import("zenn-embed-elements");
-  });
+    const getAround = async () => {
+      try {
+        const res = await fetch(
+          `/api/notes/${note.note_id}/pages/${page.page_id}/around`,
+          {
+            next: { revalidate: false },
+            credentials: "include",
+          },
+        );
+        const json = (await res.json()) as ApiResponse<ApiDataAroundPagesResponse>;
+        if (json.meta.message === "OK") {
+          if (json.data) {
+            setPrevPage(json.data.prev);
+            setNextPage(json.data.next);
+          }
+        } else {
+          setPrevPage(null);
+          setNextPage(null);
+        }
+      } catch (error) {
+        setPrevPage(null);
+        setNextPage(null);
+      }
+    }
+    getAround();
+  }, []);
   return (
     <div className="grow bg-gray-100 max-w-[1170px] mx-auto px-6 py-6 w-full">
       <div className="flex flex-row">

@@ -63,6 +63,12 @@ type ApiDataPageDetailResponse = {
   page: PageDetail;
 };
 
+type ApiDataAroundPagesResponse = {
+  type: "aroundPages";
+  prev: PageDetail | null;
+  next: PageDetail | null;
+};
+
 type InitializeApiRequest = {
   username?: string;
   password?: string;
