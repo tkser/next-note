@@ -7,12 +7,14 @@ import { toast } from "react-toastify";
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors([]);
+    setIsLoginLoading(true);
     if (!username || !password) {
       setErrors(["Username and password are required"]);
       return;
@@ -38,6 +40,7 @@ const LoginPage = () => {
       } else {
         setErrors(["An error occurred. Please try again later"]);
       }
+      setIsLoginLoading(false);
     }
   };
 
@@ -71,12 +74,18 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <div className="mb-4 text-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
-              >
-                Login
-              </button>
+              {isLoginLoading ? (
+                <div className="flex justify-center" aria-label="loading">
+                  <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
+                >
+                  Login
+                </button>
+              )}
             </div>
           </form>
         </div>
