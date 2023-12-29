@@ -19,7 +19,7 @@ const LogoutPage = () => {
       toast.success("Logout Successful.");
     };
     logout();
-  });
+  }, []);
 
   return <div className="grow flex items-center justify-center bg-gray-100" />;
 };

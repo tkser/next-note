@@ -77,7 +77,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
 
   useEffect(() => {
     import("zenn-embed-elements");
-  });
+  }, []);
 
   return (
     <div className="grow flex justify-center bg-gray-100">
