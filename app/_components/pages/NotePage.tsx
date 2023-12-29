@@ -1,15 +1,39 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BiSolidLockAlt } from "react-icons/bi";
 
 type NotePageProps = {
   note: Note;
-  pages: Page[];
   author: User | null;
 };
 
-const NotePage = ({ note, pages, author }: NotePageProps) => {
+const NotePage = ({ note, author }: NotePageProps) => {
+  const [pages, setPages] = useState<Page[]>([]);
+  useEffect(() => {
+    const fetchPages = async () => {
+      try {
+        const res = await fetch(`/api/notes/${note.note_id}/pages`, {
+          next: { revalidate: false },
+          credentials: "include",
+        });
+        const json = (await res.json()) as ApiResponse<ApiDataPageResponse[]>;
+        if (json.meta.message === "OK") {
+          if (json.data) {
+            setPages(json.data.map((d) => d.page));
+          } else {
+            setPages([]);
+          }
+        } else {
+          setPages([]);
+        }
+      } catch (err) {
+        setPages([]);
+      }
+    }
+    fetchPages();
+  }, [note.note_id]);
   return (
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
