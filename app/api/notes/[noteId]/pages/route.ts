@@ -30,9 +30,19 @@ export async function GET(
 
     const pages = await getPagesByNoteId(params.noteId, note.is_private ? true : (user ? note.user_id === user.user_id : false));
 
-    return makeResponse<ApiDataPageResponse[]>(200, "OK", pages.map((page) => ({
-      type: "page",
-      page: page,
+    return makeResponse<ApiDataPageDetailResponse[]>(200, "OK", pages.map((page) => ({
+      type: "pageDetail",
+      page: {
+        page_id: page.page_id,
+        note_id: page.note_id,
+        user_id: page.user_id,
+        title: page.title,
+        slug: page.slug,
+        position: page.position,
+        is_private: page.is_private,
+        created_at: page.created_at,
+        updated_at: page.updated_at,
+      }
     })));
   } catch (error) {
     return makeResponse(500, "INTERNAL_SERVER_ERROR");
