@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { BiSolidLockAlt } from "react-icons/bi";
 
 type DashboardPageProps = {
   notes: Note[];
@@ -10,20 +11,22 @@ type DashboardPageProps = {
 const DashboardPage = ({ notes }: DashboardPageProps) => {
   const router = useRouter();
   const handleCreateNote = () => {
+    router.prefetch("/dashboard/notes/create");
     router.push("/dashboard/notes/create");
   };
   const handleEditNote = (slug: string) => {
+    router.prefetch(`/dashboard/notes/${slug}`);
     router.push(`/dashboard/notes/${slug}`);
   };
   return (
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-semibold mb-4 text-gray-700">
+          <h1 className="text-2xl font-semibold mb-4 text-gray-700 select-none">
             My Notes
           </h1>
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded select-none"
             onClick={handleCreateNote}
           >
             Create
@@ -34,14 +37,20 @@ const DashboardPage = ({ notes }: DashboardPageProps) => {
             <li key={note.note_id} className="mb-4 border-b pb-4">
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold text-gray-700">
-                  <Link href={`/notes/${note.slug}`}>
-                    <span className="select-none">{note.is_private && "🔒"}</span>
+                  <Link
+                    href="/notes/[noteSlug]"
+                    as={`/notes/${note.slug}`}
+                    className="flex flex-row gap-1 items-center"
+                  >
+                    <span className="select-none">
+                      {note.is_private && <BiSolidLockAlt />}
+                    </span>
                     <span>{note.title}</span>
                   </Link>
                 </h2>
                 <div className="flex">
                   <button
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mr-2"
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mr-2 select-none"
                     onClick={() => handleEditNote(note.slug)}
                   >
                     Edit
@@ -51,6 +60,13 @@ const DashboardPage = ({ notes }: DashboardPageProps) => {
             </li>
           ))}
         </ul>
+        <div className="flex justify-end mt-8">
+          <Link href="/dashboard/logout" as="/dashboard/logout">
+            <span className="text-red-500 hover:text-red-600 cursor-pointer select-none">
+              Logout
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   );

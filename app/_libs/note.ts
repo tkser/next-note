@@ -1,5 +1,7 @@
 import { db } from "@vercel/postgres";
 
+import { deletePagesByNoteId } from "@/app/_libs/page";
+
 async function row2Note(row: NoteDatabaseRow): Promise<Note> {
   return {
     note_id: row.note_id,
@@ -31,11 +33,16 @@ async function getNotes(
   return notes;
 }
 
-async function getNotesByUserId(user_id: string): Promise<Note[]> {
+async function getNotesByUserId(
+  user_id: string,
+  show_private: boolean = false,
+): Promise<Note[]> {
   const client = await db.connect();
   const { rows } = await client.query<NoteDatabaseRow>(
     `
-    SELECT * FROM notes WHERE user_id = $1 AND is_deleted = false;
+    SELECT * FROM notes WHERE user_id = $1 AND is_deleted = false ${
+      show_private ? "" : "AND is_private = false"
+    }
   `,
     [user_id],
   );
@@ -58,6 +65,21 @@ async function getNote(slug: string): Promise<Note | null> {
   }
   const note = rows[0];
   return row2Note(note);
+}
+
+async function checkNoteSlugConflict(slug: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<NoteDatabaseRow>(
+    `
+    SELECT * FROM notes WHERE slug = $1 ;
+  `,
+    [slug],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
 }
 
 async function getNoteById(note_id: string): Promise<Note | null> {
@@ -125,11 +147,43 @@ async function updateNote(
   return row2Note(note);
 }
 
+async function _deleteNote(note_id: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<NoteDatabaseRow>(
+    `
+    UPDATE notes
+    SET is_deleted = true
+    WHERE note_id = $1
+    RETURNING *;
+  `,
+    [note_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
+}
+
+async function deleteNoteAndPages(note_id: string): Promise<boolean> {
+  const deletedPages = await deletePagesByNoteId(note_id);
+  if (!deletedPages) {
+    return false;
+  }
+  const deletedNote = await _deleteNote(note_id);
+  if (!deletedNote) {
+    return false;
+  }
+  return true;
+}
+
 export {
   getNotes,
   getNotesByUserId,
   getNote,
+  checkNoteSlugConflict,
   getNoteById,
   createNote,
   updateNote,
+  deleteNoteAndPages,
 };

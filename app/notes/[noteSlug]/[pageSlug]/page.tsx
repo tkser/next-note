@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import markdownHtml from "zenn-markdown-html";
 
 import { getNote } from "@/app/_libs/note";
+import { getUser } from "@/app/_libs/user";
+import { getPage, getPageBySlug } from "@/app/_libs/page";
 import AuthWrapper from "@/app/_components/AuthWrapper";
-import { getAroundPages, getPage, getPageBySlug } from "@/app/_libs/page";
 import PageViewer from "@/app/_components/pages/PageViewer";
 
 export async function generateMetadata({
@@ -37,11 +38,11 @@ const Page = async ({
   if (!page) {
     return notFound();
   }
-  const [prevPage, nextPage] = await getAroundPages(note.note_id, page.page_id);
   const article: Article = {
     contentHtml: markdownHtml(page.content),
     tableOfContents: [],
   };
+  const author = await getUser(page.user_id);
   const domHtml = new JSDOM(article.contentHtml).window.document;
   const elements = domHtml.querySelectorAll<HTMLElement>("h1, h2");
   elements.forEach((element) => {
@@ -58,10 +59,20 @@ const Page = async ({
     <>
       {page.is_private ? (
         <AuthWrapper redirect="/" user_id={page.user_id}>
-          <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} />
+          <PageViewer
+            note={note}
+            page={page}
+            article={article}
+            author={author}
+          />
         </AuthWrapper>
       ) : (
-        <PageViewer note={note} page={page} article={article} prevPage={prevPage} nextPage={nextPage} />
+        <PageViewer
+          note={note}
+          page={page}
+          article={article}
+          author={author}
+        />
       )}
     </>
   );

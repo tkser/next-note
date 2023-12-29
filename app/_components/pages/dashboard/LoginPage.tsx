@@ -1,17 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import Loading from "@/app/_components/Loading";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors([]);
+    setIsLoginLoading(true);
     if (!username || !password) {
-      setErrors(["Username and password are required"]);
+      toast.error("Username and password are required");
       return;
     }
     const res = await fetch("/api/auth/login", {
@@ -20,17 +24,23 @@ const LoginPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
+      next: { revalidate: false },
+      credentials: "include",
     });
     const data = (await res.json()) as ApiResponse<ApiDataUserResponse>;
     if (data.meta.message === "LOGIN_SUCCESS" && data.data && data.data.user) {
-      window.location.href = "/dashboard";
+      router.prefetch("/dashboard");
+      router.push("/dashboard");
+      router.refresh();
+      toast.success("Login Successful.");
     } else {
       if (data.meta.message === "INVALID_USERNAME_OR_PASSWORD") {
-        setErrors(["Username or password is incorrect"]);
+        toast.error("Username or password is incorrect");
       } else {
-        setErrors(["An error occurred. Please try again later"]);
+        toast.error("An error occurred. Please try again later");
       }
     }
+    setIsLoginLoading(false);
   };
 
   return (
@@ -40,11 +50,6 @@ const LoginPage = () => {
           Note
         </h1>
         <div>
-          <p className="text-sm mb-2 text-center text-red-500">
-            {errors.map((error) => (
-              <span key={error}>{error}</span>
-            ))}
-          </p>
           <form onSubmit={handleLogin}>
             <p className="mb-2 text-gray-500">Username:</p>
             <input
@@ -63,12 +68,16 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <div className="mb-4 text-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-              >
-                Login
-              </button>
+              {isLoginLoading ? (
+                <Loading />
+              ) : (
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
+                >
+                  Login
+                </button>
+              )}
             </div>
           </form>
         </div>

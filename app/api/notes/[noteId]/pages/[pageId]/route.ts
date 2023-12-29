@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 
 import { loginWithToken } from "@/app/_libs/auth";
 import { makeResponse } from "@/app/_utils/response";
-import { getPageById, updatePage } from "@/app/_libs/page";
+import { deletePage, getPageById, updatePage } from "@/app/_libs/page";
 
 export async function PUT(
   request: NextRequest,
@@ -60,6 +60,43 @@ export async function PUT(
       type: "page",
       page: updatedPage,
     });
+  } catch (e) {
+    return makeResponse(500, "INTERNAL_SERVER_ERROR");
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { noteId: string; pageId: string } },
+) {
+  try {
+    const pageId = params.pageId;
+
+    const token = request.cookies.get("token");
+    if (!token) {
+      return makeResponse(401, "UNAUTHORIZED");
+    }
+
+    const user = await loginWithToken(token.value);
+    if (!user) {
+      return makeResponse(401, "UNAUTHORIZED");
+    }
+
+    const page = await getPageById(pageId);
+    if (!page) {
+      return makeResponse(404, "NOT_FOUND");
+    }
+    if (page.user_id !== user.user_id) {
+      return makeResponse(403, "FORBIDDEN");
+    }
+
+    const deletedPage = await deletePage(page.page_id);
+
+    if (!deletedPage) {
+      return makeResponse(500, "INTERNAL_SERVER_ERROR");
+    }
+
+    return makeResponse(200, "SUCCESS");
   } catch (e) {
     return makeResponse(500, "INTERNAL_SERVER_ERROR");
   }

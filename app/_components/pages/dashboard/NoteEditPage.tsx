@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type NoteEditPageProps = {
   note: Note;
@@ -15,17 +16,16 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
   const [summary, setSummary] = useState(note.summary);
   const [is_private, setIsPrivate] = useState(note.is_private);
   const [note_pages, setNotePages] = useState(pages);
-  const [errors, setErrors] = useState<string[]>([]);
   const [showAddPageForm, setShowAddPageForm] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
     isPrivate: note.is_private,
   });
+  const router = useRouter();
 
   const handleSaveNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors([]);
     const data = {
       title,
       slug,
@@ -39,6 +39,8 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        next: { revalidate: false },
+        credentials: "include",
       });
       const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
       if (json.meta.message === "SUCCESS") {
@@ -54,17 +56,39 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           setIsPrivate(note.is_private);
           toast.success("Save Successful.");
         } else {
-          setErrors(["Something went wrong."]);
+          toast.error("Something went wrong.");
         }
       } else if (json.meta.message === "BAD_REQUEST") {
-        setErrors(["Invalid data."]);
+        toast.error("Invalid data.");
       } else if (json.meta.message === "SLUG_CONFLICT") {
-        setErrors(["Slug is already taken."]);
+        toast.error("Slug is already taken.");
       } else {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     } catch (err) {
-      setErrors(["Something went wrong."]);
+      toast.error("Something went wrong.");
+    }
+  };
+  const handleRemoveNote = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`/api/notes/${note.note_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        next: { revalidate: false },
+        credentials: "include",
+      });
+      const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
+      if (json.meta.message === "SUCCESS") {
+        router.push("/dashboard");
+        toast.success("Remove Successful.");
+      } else {
+        toast.error("Something went wrong.");
+      }
+    } catch (err) {
+      toast.error("Something went wrong.");
     }
   };
   const handleAddPage = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -76,9 +100,29 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
       setShowAddPageForm(true);
     }
   };
+  const handleRemovePage = async (page_id: string) => {
+    try {
+      const res = await fetch(`/api/notes/${note.note_id}/pages/${page_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        next: { revalidate: false },
+        credentials: "include",
+      });
+      const json = (await res.json()) as ApiResponse<ApiDataNoteResponse>;
+      if (json.meta.message === "SUCCESS") {
+        setNotePages(note_pages.filter((page) => page.page_id !== page_id));
+        toast.success("Remove Successful.");
+      } else {
+        toast.error("Something went wrong.");
+      }
+    } catch (err) {
+      toast.error("Something went wrong.");
+    }
+  };
   const handleAddPageSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors([]);
     const data = {
       title: formData.title,
       slug: formData.slug,
@@ -93,6 +137,8 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        next: { revalidate: false },
+        credentials: "include",
       });
       setShowAddPageForm(false);
       setFormData({ title: "", slug: "", isPrivate: false });
@@ -102,17 +148,17 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
           setNotePages([...note_pages, json.data.page]);
           toast.success("Add Successful.");
         } else {
-          setErrors(["Something went wrong."]);
+          toast.error("Something went wrong.");
         }
       } else if (json.meta.message === "BAD_REQUEST") {
-        setErrors(["Invalid data."]);
+        toast.error("Invalid data.");
       } else if (json.meta.message === "SLUG_CONFLICT") {
-        setErrors(["Slug is already taken."]);
+        toast.error("Slug is already taken.");
       } else {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     } catch (err) {
-      setErrors(["Something went wrong."]);
+      toast.error("Something went wrong.");
     }
   };
 
@@ -120,11 +166,6 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white">
         <h1 className="text-2xl font-semibold mb-4 text-gray-700">Edit Note</h1>
-        <p className="text-sm mb-2 text-red-500">
-          {errors.map((error) => (
-            <span key={error}>{error}</span>
-          ))}
-        </p>
         <form onSubmit={handleSaveNote}>
           <div className="mb-4">
             <label htmlFor="note_title" className="block text-gray-600">
@@ -184,19 +225,28 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
               Private
             </label>
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >
-            Save
-          </button>
+          <div className="mb-4 flex items-center">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 select-none"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ml-2 select-none"
+              onClick={handleRemoveNote}
+            >
+              Remove
+            </button>
+          </div>
         </form>
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-700">
             Page List
           </h2>
           <button
-            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 mb-4"
+            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 mb-4 select-none"
             onClick={handleAddPage}
           >
             Add Page
@@ -260,14 +310,14 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
               <div className="mb-4 flex items-center">
                 <button
                   type="button"
-                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 mr-2"
+                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 mr-2 select-none"
                   onClick={handleAddPage}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 select-none"
                 >
                   Save
                 </button>
@@ -280,15 +330,24 @@ const NoteEditPage = ({ note, pages }: NoteEditPageProps) => {
             )}
             {note_pages.map((page) => (
               <li
-                className="flex items-center space-x-4 mb-2 text-gray-700 border-b-2 border-gray-300 pb-1"
+                className="flex items-center mb-2 text-gray-700 border-b-2 border-gray-300 pb-1 gap-3"
                 key={page.page_id}
               >
                 <span>{page.position.toString().padStart(2, "0")}</span>
-                <Link href={`/dashboard/notes/${note.slug}/${page.slug}`}>
+                <Link
+                  href="/dashboard/notes/[noteSlug]/[pageSlug]"
+                  as={`/dashboard/notes/${note.slug}/${page.slug}`}
+                >
                   <span className="hover:underline cursor-pointer font-semibold">
                     {page.title}
                   </span>
                 </Link>
+                <span
+                  className="text-sm text-red-500 cursor-pointer underline ml-auto"
+                  onClick={() => handleRemovePage(page.page_id)}
+                >
+                  Remove
+                </span>
               </li>
             ))}
           </ul>

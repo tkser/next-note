@@ -18,7 +18,7 @@ export async function generateMetadata({
 const NoteEdit = async ({ params }: { params: { noteSlug: string } }) => {
   const note = await getNote(params.noteSlug);
   if (!note) return redirect("/dashboard");
-  const pages = await getPagesByNoteId(note.note_id);
+  const pages = await getPagesByNoteId(note.note_id, true);
   return (
     <AuthWrapper redirect="/dashboard" user_id={note.user_id}>
       <NoteEditPage note={note} pages={pages} />

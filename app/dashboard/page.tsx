@@ -12,14 +12,14 @@ export const metadata = {
 
 const Dashboard = async () => {
   const token = cookies().get("token");
-  if (!token) {
+  if (!token || token.value === "") {
     return redirect("/dashboard/login");
   }
   const user = await loginWithToken(token.value);
   if (!user) {
     return redirect("/dashboard/login");
   }
-  const notes = await getNotesByUserId(user.user_id);
+  const notes = await getNotesByUserId(user.user_id, true);
   return (
     <AuthWrapper>
       <DashboardPage notes={notes} />

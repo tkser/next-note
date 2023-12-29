@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Loading from "../../Loading";
 
 const InitializePage = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("NOT_INITIALIZED");
+  const [isLoading, setIsLoading] = useState(false);
 
   const initializeDatabase = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await fetch("/api/initialize", {
         method: "POST",
@@ -18,6 +21,8 @@ const InitializePage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
+        next: { revalidate: false },
+        credentials: "include",
       });
       const data = await response.json();
 
@@ -29,6 +34,7 @@ const InitializePage = () => {
     } catch (error) {
       setMessage("ERROR");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -43,30 +49,34 @@ const InitializePage = () => {
               This is your first time running this app. Please initialize the
               database.
             </p>
-            <form onSubmit={initializeDatabase}>
-              <p className="mb-2 text-gray-500">Admin Username:</p>
-              <input
-                type="text"
-                className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <p className="mb-2 text-gray-500">Admin password:</p>
-              <input
-                type="password"
-                className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <div className="mb-4 text-center">
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                >
-                  Initialize Database
-                </button>
-              </div>
-            </form>
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <form onSubmit={initializeDatabase}>
+                <p className="mb-2 text-gray-500">Admin Username:</p>
+                <input
+                  type="text"
+                  className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <p className="mb-2 text-gray-500">Admin password:</p>
+                <input
+                  type="password"
+                  className="border rounded w-full py-2 px-3 mb-4 text-gray-700"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <div className="mb-4 text-center">
+                  <button
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
+                  >
+                    Initialize Database
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         )}
         {message === "SUCCESS" && (
@@ -76,8 +86,11 @@ const InitializePage = () => {
             </p>
             <div className="mb-4 text-center">
               <button
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                onClick={() => router.push("/")}
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded select-none"
+                onClick={() => {
+                  router.prefetch("/");
+                  router.push("/");
+                }}
               >
                 Go to Home
               </button>

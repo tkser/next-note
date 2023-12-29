@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import markdownHtml from "zenn-markdown-html";
-import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 type PageEditPageProps = {
   page: Page;
@@ -15,7 +15,6 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
   const [value, setValue] = useState(page.content);
   const [isPreview, setIsPreview] = useState(false);
   const [title, setTitle] = useState(page.title);
-  const [errors, setErrors] = useState<string[]>([]);
 
   const contentHtml = useMemo(() => {
     return markdownHtml(value);
@@ -27,7 +26,6 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.preventDefault();
-    setErrors([]);
     if (page.content !== value || page.title !== title) {
       try {
         const res = await fetch(
@@ -44,6 +42,8 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
               position: page.position,
               is_private: page.is_private,
             }),
+            next: { revalidate: false },
+            credentials: "include",
           },
         );
         const json = (await res.json()) as ApiResponse<ApiDataPageResponse>;
@@ -60,31 +60,31 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
             router.refresh();
             toast.success("Save successfully.");
           } else {
-            setErrors(["Something went wrong."]);
+            toast.error("Something went wrong.");
           }
         } else if (json.meta.message === "BAD_REQUEST") {
-          setErrors(["Invalid data."]);
+          toast.error("Invalid data.");
         } else if (json.meta.message === "SLUG_CONFLICT") {
-          setErrors(["Slug is already taken."]);
+          toast.error("Slug is already taken.");
         } else {
-          setErrors(["Something went wrong."]);
+          toast.error("Something went wrong.");
         }
       } catch (err) {
-        setErrors(["Something went wrong."]);
+        toast.error("Something went wrong.");
       }
     }
   };
 
   useEffect(() => {
     import("zenn-embed-elements");
-  });
+  }, []);
 
   return (
     <div className="grow flex justify-center bg-gray-100">
       <div className="container mx-auto p-4 bg-white flex flex-col">
         <div className="flex justify-between items-center flex-row-reverse">
           <button
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed select-none"
             onClick={handleSave}
             disabled={!savable}
           >
@@ -97,11 +97,6 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
             className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold grow mr-4"
           />
         </div>
-        <p className="text-sm mb-2 text-red-500">
-          {errors.map((error) => (
-            <span key={error}>{error}</span>
-          ))}
-        </p>
         <div className="mb-4 text-gray-600 grow flex flex-col">
           <div className="mb-4 border-b border-gray-200">
             <ul
@@ -113,7 +108,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
                   className={`inline-block p-4 border-b-2 rounded-t-lg hover:border-gray-300 ${
                     isPreview
                       ? ""
-                      : "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold"
+                      : "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold select-none"
                   }`}
                   role="tab"
                   onClick={() => setIsPreview(false)}
@@ -125,7 +120,7 @@ const PageEditPage = ({ page }: PageEditPageProps) => {
                 <button
                   className={`inline-block p-4 border-b-2 rounded-t-lg hover:border-gray-300 ${
                     isPreview
-                      ? "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold"
+                      ? "hover:text-gray-600 border-gray-500 hover:border-gray-500 font-semibold select-none"
                       : ""
                   }`}
                   role="tab"

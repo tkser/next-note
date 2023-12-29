@@ -17,11 +17,31 @@ async function row2Page(row: PageDatabaseRow): Promise<Page> {
   };
 }
 
-async function getPagesByNoteId(note_id: string): Promise<Page[]> {
+function page2detail(page: Page): PageDetail {
+  return {
+    page_id: page.page_id,
+    title: page.title,
+    slug: page.slug,
+    is_private: page.is_private,
+    created_at: page.created_at,
+    updated_at: page.updated_at,
+    user_id: page.user_id,
+    note_id: page.note_id,
+    position: page.position,
+  };
+}
+
+async function getPagesByNoteId(
+  note_id: string,
+  show_private: boolean = false,
+): Promise<Page[]> {
   const client = await db.connect();
   const { rows } = await client.query<PageDatabaseRow>(
     `
-    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ORDER BY position ASC;
+    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ${
+      show_private ? "" : "AND is_private = false"
+    }
+    ORDER BY position ASC;
   `,
     [note_id],
   );
@@ -52,6 +72,21 @@ async function getPage(note_id: string, slug: string): Promise<Page | null> {
   }
   const page = rows[0];
   return row2Page(page);
+}
+
+async function checkPageSlugConflict(note_id: string, slug: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    SELECT * FROM pages WHERE note_id = $1 AND slug = $2;
+  `,
+    [note_id, slug],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
 }
 
 async function getPageById(page_id: string): Promise<Page | null> {
@@ -85,11 +120,15 @@ async function getPageBySlug(
 async function getAroundPages(
   note_id: string,
   page_id: string,
+  show_private: boolean = false,
 ): Promise<[Page | null, Page | null]> {
   const client = await db.connect();
   const { rows } = await client.query<PageDatabaseRow>(
     `
-    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ORDER BY position ASC;
+    SELECT * FROM pages WHERE note_id = $1 AND is_deleted = false ${
+      show_private ? "" : "AND is_private = false"
+    }
+    ORDER BY position ASC;
   `,
     [note_id],
   );
@@ -153,13 +192,53 @@ async function updatePage(
   return row2Page(page);
 }
 
+async function deletePage(page_id: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    UPDATE pages
+    SET is_deleted = true
+    WHERE page_id = $1
+    RETURNING *;
+  `,
+    [page_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
+}
+
+async function deletePagesByNoteId(note_id: string): Promise<boolean> {
+  const client = await db.connect();
+  const { rows } = await client.query<PageDatabaseRow>(
+    `
+    UPDATE pages
+    SET is_deleted = true
+    WHERE note_id = $1
+    RETURNING *;
+  `,
+    [note_id],
+  );
+  await client.release();
+  if (!rows[0]) {
+    return false;
+  }
+  return true;
+}
+
 export {
+  page2detail,
   getPagesByNoteId,
   getPagesByNoteSlug,
   getPage,
+  checkPageSlugConflict,
   getPageById,
   getPageBySlug,
   getAroundPages,
   createPage,
   updatePage,
+  deletePage,
+  deletePagesByNoteId,
 };

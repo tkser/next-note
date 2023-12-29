@@ -1,7 +1,9 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+"use client";
 
-import { loginWithToken } from "@/app/_libs/auth";
+import { useContext } from "react";
+import { useRouter } from "next/navigation";
+
+import { AuthContext } from "@/app/_providor/AuthProvider";
 
 type AuthWrapperProps = {
   children: React.ReactNode;
@@ -10,22 +12,24 @@ type AuthWrapperProps = {
   redirect?: string;
 };
 
-const AuthWrapper = async (props: AuthWrapperProps) => {
-  const token = cookies().get("token");
-  if (!token) {
-    return redirect(props.redirect || "/dashboard/login");
-  }
-  const user = await loginWithToken(token.value);
+const AuthWrapper = (props: AuthWrapperProps) => {
+  const user = useContext(AuthContext);
+  const router = useRouter();
+
+  const redirect_uri = props.redirect || "/dashboard/login";
   if (!user) {
-    return redirect(props.redirect || "/dashboard/login");
+    router.prefetch(redirect_uri);
+    router.push(redirect_uri);
+  } else if (props.role && user.role !== props.role) {
+    router.prefetch(redirect_uri);
+    router.push(redirect_uri);
+  } else if (props.user_id && user.user_id !== props.user_id) {
+    router.prefetch(redirect_uri);
+    router.push(redirect_uri);
+  } else {
+    return <>{props.children}</>;
   }
-  if (props.role && user.role !== props.role) {
-    return redirect(props.redirect || "/dashboard/login");
-  }
-  if (props.user_id && user.user_id !== props.user_id) {
-    return redirect(props.redirect || "/dashboard/login");
-  }
-  return <>{props.children}</>;
+  return <></>;
 };
 
 export default AuthWrapper;
